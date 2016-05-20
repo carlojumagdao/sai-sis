@@ -250,9 +250,11 @@
         <div cs="col s12 m12 l12">
             <h5 class="center"><b>How can you be part of his/her dream?</b></h5>
                 Thank you for your intension of fulfilling our learners dream, Kindly send us your message on how you want this dream to come alive.
+                <br>
+                <h6>Email us at: <b>info@silidaralan.org</b></h6>
         </div>
         <div cs="col s12 m12 l12">
-            <a class="btn col s12 home" id="">Home</a>
+            <a class="btn col s12 home" id="">Back To Home</a>
             &nbsp;
         </div>
     </div>
@@ -266,6 +268,7 @@
             $( ".grades-div" ).hide();
             $( ".dream-div" ).hide();
             $( ".attendance-div" ).hide();
+            $( ".dream-part-div" ).hide();
         });
         $( ".stories" ).click(function() {
             $( ".main" ).hide(1000);
