@@ -62,7 +62,7 @@
 
                                         <a href="donor/edit/{{$donor->intDonorId}}" class='waves-effect waves-light btn-floating btn-small orange edit' data-position='top' data-tooltip='Edit'><i class='mdi-content-create'></i></a>
 
-                                        <a href="donor/email/send/{{$donor->intDonorId}}/{{$donor->strDonorEmail}}" class="waves-effect waves-light btn-floating btn-small blue" data-position='top' data-tooltip='Send'><i class='mdi-content-send'></i></a>
+                                        <a href="#send" class="waves-effect waves-light btn-floating btn-small blue send" data-position='top' data-tooltip='Send'><i class='mdi-content-send'></i></a>
                                         
                                         <a href="#delete" class="waves-effect waves-light btn-floating btn-small red delete" data-position='top' data-tooltip='Delete'><i class='mdi-action-delete'></i></a>
                                         </td>
