@@ -155,9 +155,10 @@ class donorController extends Controller
                         WHERE l.blLearDelete = 0 AND l.strLearCode NOT IN (SELECT strDLLearCode FROM tblDonorLearner) ORDER by p.strProgName;');
         return view('donor.donee', ['learners' => $learners,'sponsored'=>$sponsoredLearners]);
     }
-    public function EmailSend($id, $email)
+    public function EmailSend(Request $request)
     {   
-        
+        $id = $request->input('id');
+        $email = $request->input('email');
         $donee = DB::select('SELECT d.strDonorName AS donorName,d.strDonorEmail AS email, dl.strDLLearCode as learnerCode, CONCAT(l.strLearFname," ",l.strLearLname) AS learname FROM tblDonorLearner AS dl INNER JOIN tblDonor as d ON d.intDonorId = dl.intDLDonorId INNER JOIN tblLearner AS l ON dl.strDLLearCode = l.strLearCode WHERE d.intDonorId = ?',[$id]);
 
         Mail::send('emails.donor', ['donees' => $donee], function ($message) use ($donee){
