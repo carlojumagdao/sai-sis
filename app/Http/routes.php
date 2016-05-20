@@ -80,7 +80,7 @@ Route::group(['middleware' => 'auth'], function(){
 		'uses' => 'donorController@update',
 		'as' => 'update.donor'
 	));
-	Route::post('donor/email/send', array(
+	Route::get('donor/email/send/{id}/{email}', array(
 		'uses' => 'donorController@EmailSend',
 		'as' => 'send.donor'
 	));
