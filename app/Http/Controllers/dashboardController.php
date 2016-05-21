@@ -38,6 +38,7 @@ class dashboardController extends Controller
             $dblAmount = $value->amount;
         }
         $grades = DB::select('SELECT (AVG(dblGrdEnglish) + AVG(dblGrdFilipino) + AVG(dblGrdMakabayan) + AVG(dblGrdMath) + AVG(dblGrdScience)) / 5 AS dblGrade FROM tblGrade WHERE blGrdDelete = 0 GROUP BY intGrdLvl;');
+        $dblAverage = 0;
         foreach ($grades as $value) {
             $dblAverage = $value->dblGrade;
         }
