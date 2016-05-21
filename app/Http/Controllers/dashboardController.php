@@ -12,16 +12,21 @@ class dashboardController extends Controller
 {
     public function index(){
         // for the birthday section
-        $bdayLear = DB::select('SELECT COUNT(strLearCode) as bdayLear FROM tblLearner WHERE MONTH(datLearBirthDate) = MONTH(NOW()) AND DAY(datLearBirthDate) = DAY(NOW()) AND blLearDelete = 0;');
-        $bdayCole = DB::select('SELECT COUNT(intColeId) as bdayCole FROM tblColearner WHERE MONTH(datColeBirthDate) = MONTH(NOW()) AND DAY(datColeBirthDate) = DAY(NOW()) AND blColeDelete = 0;');
-        $bdayDonor = DB::select('SELECT COUNT(intDonorId) as bdayDonor FROM tblDonor WHERE MONTH(datDonorBDate) = MONTH(NOW()) AND DAY(datDonorBDate) = DAY(NOW()) AND blDonorDelete = 0;');
-        for($intCounter = 0; $intCounter < 1; $intCounter++){
-            $bdays = $bdayLear[$intCounter]->bdayLear + $bdayCole[$intCounter]->bdayCole + $bdayDonor[$intCounter]->bdayDonor;
-            if($bdays < 0) {
-                $bdays = 0;
-            }
-            session(['bdays' => $bdays]);
+        $bdayLear = DB::select('SELECT COUNT(strLearCode) as bdayLear FROM tblLearner WHERE MONTH(datLearBirthDate) = MONTH(NOW()) AND DAY(datLearBirthDate) = DAY(NOW()) AND blLearDelete = 0');
+        $bdayCole = DB::select('SELECT COUNT(intColeId) as bdayCole FROM tblColearner WHERE MONTH(datColeBirthDate) = MONTH(NOW()) AND DAY(datColeBirthDate) = DAY(NOW()) AND blColeDelete = 0');
+        $bdayDonor = DB::select('SELECT COUNT(intDonorId) as bdayDonor FROM tblDonor WHERE MONTH(datDonorBDate) = MONTH(NOW()) AND DAY(datDonorBDate) = DAY(NOW()) AND blDonorDelete = 0');
+        foreach ($bdayLear as $value) {
+            $countBdayLear = $value->bdayLear;
         }
+        foreach ($bdayCole as $value) {
+            $countBdayCole = $value->bdayCole;
+        }
+        foreach ($bdayDonor as $value) {
+            $countBdayDonor = $value->bdayDonor;
+        }
+        $bdays = 0;
+        $bdays = $countBdayLear + $countBdayCole + $countBdayDonor;
+        session(['bdays' => $bdays]);
         // for the birthday section
         $learners = DB::select('SELECT COUNT(strLearCode) AS learners FROM tblLearner');
         foreach ($learners as $value) {
