@@ -15,8 +15,6 @@
     </style>
 </head>
 <body>
-    <img src="assets/images/sailogo-black.png" alt="SAI Logo" width="150">
-    <br>
     <br>
     <div style="margin-left: 4%">
     <h2> Grades Report</h2>

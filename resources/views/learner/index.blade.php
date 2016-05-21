@@ -22,6 +22,22 @@
     <div class="container">
         <div class="section">
             <div class="row">
+                @if ($errors->any())
+                    
+                        <ul>
+                        <blockquote class="error">
+                        {!! implode('', $errors->all(
+                            '<li>:message</li>'
+                        )) !!}
+
+                    </blockquote>
+                        </ul>
+                @endif
+                @if (Session::has('message'))
+                    <div>
+                        <blockquote>{{ Session::get('message') }}</blockquote>
+                    </div>
+                @endif
                 <div class="col s12 m12 l12">
                     <div class="card white">
                         <div class="card-content black-text">
@@ -55,8 +71,9 @@
                                         <td>{{$learner->strProgName}}</td>
                                         <td>{{$learner->strSchName}}</td>
                                         <td>
-                                            <a href="#view" class='waves-effect waves-light btn-floating btn-small blue view' data-position='top' data-tooltip='Edit'><i class='mdi-action-visibility'></i></a>
-                                            <a href="#delete" class="waves-effect waves-light btn-floating btn-small red delete" data-position='top' data-tooltip='Delete'><i class='mdi-action-delete'></i></a>
+                                            <a href="learner/view/{{$learner->strLearCode}}" class='waves-effect waves-light btn-floating btn-small blue' data-position='top' data-tooltip='Edit'><i class='mdi-action-visibility'></i></a>
+
+                                            <a href="learner/delete/{{$learner->strLearCode}}" class="waves-effect waves-light btn-floating btn-small red" data-position='top' data-tooltip='Delete'><i class='mdi-action-delete'></i></a>
                                         </td>
                                     </tr>
                                 @endforeach

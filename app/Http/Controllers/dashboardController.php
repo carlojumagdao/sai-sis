@@ -11,31 +11,43 @@ use App\Http\Controllers\Controller;
 class dashboardController extends Controller
 {
     public function index(){
-    	$learners = DB::select('SELECT COUNT(strLearCode) AS learners FROM tblLearner');
-    	foreach ($learners as $value) {
-    		$intLearners = $value->learners;
-    	}
-    	$donors = DB::select('SELECT COUNT(intDonorId) AS donors, SUM(dblDonorAmount) AS amount FROM tblDonor');
-    	foreach ($donors as $value) {
-    		$intDonors = $value->donors;
-    		$dblAmount = $value->amount;
-    	}
-    	$grades = DB::select('SELECT (AVG(dblGrdEnglish) + AVG(dblGrdFilipino) + AVG(dblGrdMakabayan) + AVG(dblGrdMath) + AVG(dblGrdScience)) / 5 AS dblGrade FROM tblGrade WHERE blGrdDelete = 0 GROUP BY intGrdLvl;');
-    	foreach ($grades as $value) {
-    		$dblAverage = $value->dblGrade;
-    	}
-    	$sespresents = DB::select('SELECT count(a.intAttId) as content, s.strSesName as session FROM tblSession as s
+        // for the birthday section
+        $bdayLear = DB::select('SELECT COUNT(strLearCode) as bdayLear FROM tblLearner WHERE MONTH(datLearBirthDate) = MONTH(NOW()) AND DAY(datLearBirthDate) = DAY(NOW()) AND blLearDelete = 0;');
+        $bdayCole = DB::select('SELECT COUNT(intColeId) as bdayCole FROM tblColearner WHERE MONTH(datColeBirthDate) = MONTH(NOW()) AND DAY(datColeBirthDate) = DAY(NOW()) AND blColeDelete = 0;');
+        $bdayDonor = DB::select('SELECT COUNT(intDonorId) as bdayDonor FROM tblDonor WHERE MONTH(datDonorBDate) = MONTH(NOW()) AND DAY(datDonorBDate) = DAY(NOW()) AND blDonorDelete = 0;');
+        for($intCounter = 0; $intCounter < 1; $intCounter++){
+            $bdays = $bdayLear[$intCounter]->bdayLear + $bdayCole[$intCounter]->bdayCole + $bdayDonor[$intCounter]->bdayDonor;
+            if($bdays < 0) {
+                $bdays = 0;
+            }
+            session(['bdays' => $bdays]);
+        }
+        // for the birthday section
+        $learners = DB::select('SELECT COUNT(strLearCode) AS learners FROM tblLearner');
+        foreach ($learners as $value) {
+            $intLearners = $value->learners;
+        }
+        $donors = DB::select('SELECT COUNT(intDonorId) AS donors, SUM(dblDonorAmount) AS amount FROM tblDonor');
+        foreach ($donors as $value) {
+            $intDonors = $value->donors;
+            $dblAmount = $value->amount;
+        }
+        $grades = DB::select('SELECT (AVG(dblGrdEnglish) + AVG(dblGrdFilipino) + AVG(dblGrdMakabayan) + AVG(dblGrdMath) + AVG(dblGrdScience)) / 5 AS dblGrade FROM tblGrade WHERE blGrdDelete = 0 GROUP BY intGrdLvl;');
+        foreach ($grades as $value) {
+            $dblAverage = $value->dblGrade;
+        }
+        $sespresents = DB::select('SELECT count(a.intAttId) as content, s.strSesName as session FROM tblSession as s
                 LEFT JOIN tblSchoolDay as sd ON sd.intSDSesId = s.intSesId
                 LEFT JOIN tblAttendance as a ON sd.intSDId = a.intAttSDId
             WHERE s.blSesDelete = 0 GROUP BY s.strSesName ORDER BY s.strSesName');
-    	$sesdays = DB::select('SELECT count(sd.intSDId) as content, s.strSesName as session FROM tblSession as s
+        $sesdays = DB::select('SELECT count(sd.intSDId) as content, s.strSesName as session FROM tblSession as s
                     LEFT JOIN tblSchoolDay as sd ON s.intSesId = sd.intSDSesId
                 WHERE s.blSesDelete = 0 GROUP BY s.strSesName ORDER BY s.strSesName');      
-    	$sesgrades = DB::select('SELECT (AVG(g.dblGrdEnglish) + AVG(g.dblGrdFilipino) + AVG(g.dblGrdMakabayan) + AVG(g.dblGrdMath) + AVG(g.dblGrdScience)) / 5 
+        $sesgrades = DB::select('SELECT (AVG(g.dblGrdEnglish) + AVG(g.dblGrdFilipino) + AVG(g.dblGrdMakabayan) + AVG(g.dblGrdMath) + AVG(g.dblGrdScience)) / 5 
             AS content, s.strSesName AS session FROM tblSession AS s 
             LEFT JOIN tblLearner as l ON s.intSesId = l.intLearSesId 
             LEFT JOIN tblGrade AS g ON l.strLearCode = g.strGrdLearCode WHERE s.blSesDelete = 0 GROUP BY s.strSesName ');
-    	$seslearners = DB::select('SELECT count(l.strLearCode) AS content, s.strSesName AS session FROM tblSession as s
+        $seslearners = DB::select('SELECT count(l.strLearCode) AS content, s.strSesName AS session FROM tblSession as s
                 LEFT JOIN tblLearner as l ON s.intSesId = l.intLearSesId
             WHERE s.blSesDelete = 0 GROUP BY s.strSesName  ORDER BY s.strSesName ');
 
@@ -48,16 +60,16 @@ class dashboardController extends Controller
                 LEFT JOIN tblLearner as l ON s.intSesId = l.intLearSesId
             WHERE p.blProgDelete = 0 GROUP BY p.strProgName  ORDER BY p.strProgName');
 
-    	for($intCounter = 0; $intCounter < sizeOf($seslearners); $intCounter++){
-    		if($sespresents[$intCounter]->content == 0 || $seslearners[$intCounter]->content == 0 || $sesdays[$intCounter]->content == 0){
-    			$sespresents[$intCounter]->attendance = 0;
-			} else{
-				$value = $sespresents[$intCounter]->content / $seslearners[$intCounter]->content;
-    			$finalValue = ($value / $sesdays[$intCounter]->content ) * 100;
-    			$sespresents[$intCounter]->attendance = $finalValue;
-			}
-    		
-    	}
-    	return view('pages.dashboard',['intLearners' => $intLearners,'intDonors'=>$intDonors,'dblAmount'=>$dblAmount,'dblAverage'=>round($dblAverage),'sesgrades'=>$sesgrades,'seslearners'=>$seslearners,'sesattendance'=>$sespresents,'loclears'=>$loclears,'proglears'=>$proglears]);
+        for($intCounter = 0; $intCounter < sizeOf($seslearners); $intCounter++){
+            if($sespresents[$intCounter]->content == 0 || $seslearners[$intCounter]->content == 0 || $sesdays[$intCounter]->content == 0){
+                $sespresents[$intCounter]->attendance = 0;
+            } else{
+                $value = $sespresents[$intCounter]->content / $seslearners[$intCounter]->content;
+                $finalValue = ($value / $sesdays[$intCounter]->content ) * 100;
+                $sespresents[$intCounter]->attendance = $finalValue;
+            }
+            
+        }
+        return view('pages.dashboard',['intLearners' => $intLearners,'intDonors'=>$intDonors,'dblAmount'=>$dblAmount,'dblAverage'=>round($dblAverage),'sesgrades'=>$sesgrades,'seslearners'=>$seslearners,'sesattendance'=>$sespresents,'loclears'=>$loclears,'proglears'=>$proglears]);
     }
 }

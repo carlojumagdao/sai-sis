@@ -39,7 +39,7 @@ class learnerController extends Controller
         return view('learner.index', ['learners' => $result]);
     }
     public function newlearner(){
-    	$result = DB::select('SELECT strLearCode FROM tblLearner ORDER BY strLearCode');
+        $result = DB::select('SELECT strLearCode FROM tblLearner ORDER BY strLearCode');
         $ses_options = DB::table('tblSession')
             ->where('blSesDelete', 0)
             ->lists('strSesName', 'intSesId');
@@ -48,23 +48,23 @@ class learnerController extends Controller
         ->lists('strSchName', 'intSchId');
         $strLatestCode = "";
         foreach ($result as $value) {
-        	foreach ($value as $key ) {
-        		$strLatestCode = $key;
-        	}
+            foreach ($value as $key ) {
+                $strLatestCode = $key;
+            }
         }
         $strNewCode = $this->smartcounter($strLatestCode);
         return view('learner.create', ['strNewCode' => $strNewCode, 'ses_options' => $ses_options, 'sch_options' => $sch_options]);
     }
-    public function profile(Request $request){
-    	$strGotCode = $request->input('id');
-    	$result = DB::select('SELECT * FROM tblLearner WHERE strLearCode = ?',[$strGotCode]);
+    public function profile($id){
+        $strGotCode = $id;
+        $result = DB::select('SELECT * FROM tblLearner WHERE strLearCode = ?',[$strGotCode]);
         $grades = DB::select('SELECT AVG(dblGrdFilipino) as dblGrdFilipino,AVG(dblGrdMath) as dblGrdMath,AVG(dblGrdScience) as dblGrdScience,AVG(dblGrdEnglish) as dblGrdEnglish,AVG(dblGrdMakabayan) as dblGrdMakabayan, intGrdLvl, intGrdId FROM tblGrade WHERE strGrdLearCode = ? AND blGrdDelete = 0 GROUP BY intGrdLvl ORDER BY intGrdLvl',[$strGotCode]);
         $attendance = DB::select('SELECT MONTH(s.datSchoolDay) AS month, YEAR(s.datSchoolDay) AS year, DAY(s.datSchoolDay) as day, a.intAttId, s.datSchoolDay, a.blAttStatus FROM tblAttendance AS a LEFT JOIN tblSchoolDay AS s ON a.intAttSDId = s.intSDId WHERE blAttDelete = 0 AND strAttLearCode = ? ORDER BY s.datSchoolDay DESC',[$strGotCode]);
         $schDays = DB::select('SELECT MONTH(s.datSchoolDay) AS month, YEAR(s.datSchoolDay) AS year, DAY(s.datSchoolDay) as day, s.datSchoolDay, s.intSDId FROM tblLearner as l
             INNER JOIN tblSchoolDay as s ON l.intLearSesId = s.intSDSesId WHERE l.strLearCode = ? AND s.intSDId NOT IN (SELECT intAttSDId FROM tblAttendance WHERE strAttLearCode = ?) ORDER BY s.datSchoolDay DESC',[$strGotCode,$strGotCode]);
         $stories = DB::select('SELECT * FROM tblStory WHERE strStoLearCode = ?',[$strGotCode]);
         $procGrades = $this->ProcessGrades($grades);
-    	$ses_options = DB::table('tblSession')
+        $ses_options = DB::table('tblSession')
             ->where('blSesDelete', 0)
             ->lists('strSesName', 'intSesId');
         $sch_options = DB::table('tblSchool')
@@ -75,8 +75,22 @@ class learnerController extends Controller
             INNER JOIN tblSchoolDay as s ON l.intLearSesId = s.intSDSesId WHERE l.strLearCode = ? AND s.intSDId NOT IN (SELECT intAttSDId FROM tblAttendance WHERE strAttLearCode = ?) ORDER BY s.datSchoolDay DESC',[$strGotCode,$strGotCode]);
         return view('learner.profile',['absent' => $attAbsent,'present' => $attPresent,'infos' => $result, 'stories' => $stories,'schDays' => $schDays, 'days' => $attendance, 'grades' => $procGrades, 'ses_options' => $ses_options, 'sch_options' => $sch_options]);
     }
+    public function delete(Request $request, $id){
+
+        $Donee = DB::select('SELECT intDLId FROM tblDonorLearner WHERE strDLLearCode = ?', [$id]);
+        if($Donee){
+            return Redirect::back()->withErrors("Cannot delete this record, because it is used by another record.");
+        } else{   
+            $Learner = Learner::find($id);
+            $Learner->blLearDelete = '1';
+            $Learner->save();
+        }
+        //redirect
+        $request->session()->flash('message', 'Successfully deleted.');   
+        return Redirect::back();
+    }
     public function update(Request $request){
-    	$rules = array(
+        $rules = array(
             'txtCode' => 'required',
             'txtFname' => 'required',
             'txtLname' => 'required',
@@ -109,62 +123,62 @@ class learnerController extends Controller
         if ($validator->fails()) {
             return Redirect::back()->withErrors($validator);
         } else{
-        	if($request->file('pic') == null){
-        		try{
-		      		$Learner = Learner::find($request->input('txtCode'));
-		      		if($Learner){
-		      			$Learner->strLearCode = $request->input('txtCode');
-				        $Learner->strLearFname = $request->input('txtFname');
-				        $Learner->strLearLname = $request->input('txtLname');
-				        $Learner->datLearBirthDate = $request->input('datBdate');
-				        $Learner->blLearGender = $request->input('rdGender');
+            if($request->file('pic') == null){
+                try{
+                    $Learner = Learner::find($request->input('txtCode'));
+                    if($Learner){
+                        $Learner->strLearCode = $request->input('txtCode');
+                        $Learner->strLearFname = $request->input('txtFname');
+                        $Learner->strLearLname = $request->input('txtLname');
+                        $Learner->datLearBirthDate = $request->input('datBdate');
+                        $Learner->blLearGender = $request->input('rdGender');
                         $Learner->strLearDream = $request->input('txtDream');
                         $Learner->strLearVision = $request->input('txtVision');
                         $Learner->strLearContact = $request->input('txtContact');
-				        $Learner->intLearSesId = $request->input('selSes');
-				        $Learner->intLearSchId = $request->input('selSchool');
-				        $Learner->save();
-		      		}
-		      	}catch (\Illuminate\Database\QueryException $e){
-					$errMess = $e->getMessage();
-					return Redirect::back()->withErrors($errMess);
-				}
-        	}
-        	else if($request->file('pic')->isValid()) {
-		      	$destinationPath = 'assets/images/uploads'; // upload path
-		      	$extension = $request->file('pic')->getClientOriginalExtension(); // getting image extension
-		      	$fileName = rand(11111,99999).'.'.$extension; // renameing image
-		      	$request->file('pic')->move($destinationPath, $fileName); // uploading file to given path
-		      	try{
-		      		$Learner = Learner::find($request->input('txtCode'));
-		      		if($Learner){
-		      			$Learner->strLearCode = $request->input('txtCode');
-				        $Learner->strLearFname = $request->input('txtFname');
-				        $Learner->strLearLname = $request->input('txtLname');
-				        $Learner->datLearBirthDate = $request->input('datBdate');
-				        $Learner->blLearGender = $request->input('rdGender');
+                        $Learner->intLearSesId = $request->input('selSes');
+                        $Learner->intLearSchId = $request->input('selSchool');
+                        $Learner->save();
+                    }
+                }catch (\Illuminate\Database\QueryException $e){
+                    $errMess = $e->getMessage();
+                    return Redirect::back()->withErrors($errMess);
+                }
+            }
+            else if($request->file('pic')->isValid()) {
+                $destinationPath = 'assets/images/uploads'; // upload path
+                $extension = $request->file('pic')->getClientOriginalExtension(); // getting image extension
+                $fileName = rand(11111,99999).'.'.$extension; // renameing image
+                $request->file('pic')->move($destinationPath, $fileName); // uploading file to given path
+                try{
+                    $Learner = Learner::find($request->input('txtCode'));
+                    if($Learner){
+                        $Learner->strLearCode = $request->input('txtCode');
+                        $Learner->strLearFname = $request->input('txtFname');
+                        $Learner->strLearLname = $request->input('txtLname');
+                        $Learner->datLearBirthDate = $request->input('datBdate');
+                        $Learner->blLearGender = $request->input('rdGender');
                         $Learner->strLearDream = $request->input('txtDream');
                         $Learner->strLearVision = $request->input('txtVision');
                         $Learner->strLearContact = $request->input('txtContact');
-				        $Learner->strLearPicPath = $fileName;
-				        $Learner->intLearSesId = $request->input('selSes');
-				        $Learner->intLearSchId = $request->input('selSchool');
-				        $Learner->save();
-		      		}
-			        
-		      	}catch (\Illuminate\Database\QueryException $e){
-					$errMess = $e->getMessage();
-					return Redirect::back()->withErrors($errMess);
-				}
-		    } else{
-      			return Redirect::back()->withErrors("uploaded file is not valid");
-		    }
+                        $Learner->strLearPicPath = $fileName;
+                        $Learner->intLearSesId = $request->input('selSes');
+                        $Learner->intLearSchId = $request->input('selSchool');
+                        $Learner->save();
+                    }
+                    
+                }catch (\Illuminate\Database\QueryException $e){
+                    $errMess = $e->getMessage();
+                    return Redirect::back()->withErrors($errMess);
+                }
+            } else{
+                return Redirect::back()->withErrors("uploaded file is not valid");
+            }
         }
         //redirect
         $request->session()->flash('message', 'Successfully updated.');    
         return Redirect::back();
     }
-	public function create(Request $request){
+    public function create(Request $request){
         $rules = array(
             'txtCode' => 'required',
             'txtFname' => 'required',
@@ -198,37 +212,37 @@ class learnerController extends Controller
         if ($validator->fails()) {
             return Redirect::back()->withErrors($validator);
         } else{
-        	if ($request->file('pic')->isValid()) {
-		      	$destinationPath = 'assets/images/uploads'; // upload path
-		      	$extension = $request->file('pic')->getClientOriginalExtension(); // getting image extension
-		      	$fileName = rand(11111,99999).'.'.$extension; // renameing image
-		      	$request->file('pic')->move($destinationPath, $fileName); // uploading file to given path
-		      	try{
-			      	$Learner = new Learner();
-			        $Learner->strLearCode = $request->input('txtCode');
-			        $Learner->strLearFname = $request->input('txtFname');
-			        $Learner->strLearLname = $request->input('txtLname');
-			        $Learner->datLearBirthDate = $request->input('datBdate');
-			        $Learner->blLearGender = $request->input('rdGender');
-			        $Learner->strLearPicPath = $fileName;
+            if ($request->file('pic')->isValid()) {
+                $destinationPath = 'assets/images/uploads'; // upload path
+                $extension = $request->file('pic')->getClientOriginalExtension(); // getting image extension
+                $fileName = rand(11111,99999).'.'.$extension; // renameing image
+                $request->file('pic')->move($destinationPath, $fileName); // uploading file to given path
+                try{
+                    $Learner = new Learner();
+                    $Learner->strLearCode = $request->input('txtCode');
+                    $Learner->strLearFname = $request->input('txtFname');
+                    $Learner->strLearLname = $request->input('txtLname');
+                    $Learner->datLearBirthDate = $request->input('datBdate');
+                    $Learner->blLearGender = $request->input('rdGender');
+                    $Learner->strLearPicPath = $fileName;
                     $Learner->strLearDream = $request->input('txtDream');
                     $Learner->strLearVision = $request->input('txtVision');
                     $Learner->strLearContact = $request->input('txtContact');
-			        $Learner->intLearSesId = $request->input('selSes');
-			        $Learner->intLearSchId = $request->input('selSchool');
-			        $Learner->save();
-		      	}catch (\Illuminate\Database\QueryException $e){
-					$errMess = $e->getMessage();
-					return Redirect::back()->withErrors($errMess);
-				}
-		    } else{
-      			return Redirect::back()->withErrors("uploaded file is not valid");
-		    }
+                    $Learner->intLearSesId = $request->input('selSes');
+                    $Learner->intLearSchId = $request->input('selSchool');
+                    $Learner->save();
+                }catch (\Illuminate\Database\QueryException $e){
+                    $errMess = $e->getMessage();
+                    return Redirect::back()->withErrors($errMess);
+                }
+            } else{
+                return Redirect::back()->withErrors("uploaded file is not valid");
+            }
         }
         //redirect
         $request->session()->flash('message', 'Successfully added.');    
         return Redirect::back();
-	}
+    }
     public function deleteGrade(Request $request){
         $intGrdId = $request->input('id');
         try{
@@ -496,33 +510,33 @@ class learnerController extends Controller
         }
         return $grades;
     }
-	function smartcounter($strLatestCode){
-		if(empty($strLatestCode) || $strLatestCode == " "){
-			return "CODE001";
-		}
-		$chNumValue = str_split($strLatestCode);
-		$intStrLength = strlen($strLatestCode);
-		$blnProof = 0;
+    function smartcounter($strLatestCode){
+        if(empty($strLatestCode) || $strLatestCode == " "){
+            return "CODE001";
+        }
+        $chNumValue = str_split($strLatestCode);
+        $intStrLength = strlen($strLatestCode);
+        $blnProof = 0;
 
-		try {
-			for($intCounter = $intStrLength-1; $intCounter > -1; $intCounter--){
-				if(is_numeric($chNumValue[$intCounter]) && $chNumValue[$intCounter] != '9'){
-					$chNumValue[$intCounter]++;
-					$blnProof = 1;
-					break;
-				} elseif (is_numeric($chNumValue[$intCounter])) {
-					$chNumValue[$intCounter] = '0';
-				} elseif (!(is_numeric($chNumValue[$intCounter])) && $blnProof == 1) {
-					break;
-			}
-		}
-		$strNewCode = implode("", $chNumValue);	
-		} catch (Exception $e) {
-			echo "ERROR:". $e.getMessage();
-		}
-		if($strLatestCode == $strNewCode){
-			$strNewCode = $strNewCode."0";
-		}
-		return $strNewCode;
-	}
+        try {
+            for($intCounter = $intStrLength-1; $intCounter > -1; $intCounter--){
+                if(is_numeric($chNumValue[$intCounter]) && $chNumValue[$intCounter] != '9'){
+                    $chNumValue[$intCounter]++;
+                    $blnProof = 1;
+                    break;
+                } elseif (is_numeric($chNumValue[$intCounter])) {
+                    $chNumValue[$intCounter] = '0';
+                } elseif (!(is_numeric($chNumValue[$intCounter])) && $blnProof == 1) {
+                    break;
+            }
+        }
+        $strNewCode = implode("", $chNumValue); 
+        } catch (Exception $e) {
+            echo "ERROR:". $e.getMessage();
+        }
+        if($strLatestCode == $strNewCode){
+            $strNewCode = $strNewCode."0";
+        }
+        return $strNewCode;
+    }
 }

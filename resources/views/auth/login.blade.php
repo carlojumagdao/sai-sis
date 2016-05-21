@@ -80,11 +80,11 @@
             <button class="btn waves-effect waves-light col s12">Login</button>
           </div>
         </div>
-        <div class="row">
+        <!-- <div class="row">
           <div class="input-field col s6 m6 l6">
               <p class="margin right-align medium-small"><a href="/password/email">Forgot password ?</a></p>
           </div>          
-        </div>
+        </div> -->
 
       </form>
     </div>

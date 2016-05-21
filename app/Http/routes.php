@@ -160,6 +160,14 @@ Route::group(['middleware' => 'auth'], function(){
 		'uses' => 'learnerController@newlearner',
 		'as' => 'create.learner'
 	));
+	Route::get('learner/view/{id}', array(
+		'uses' => 'learnerController@profile',
+		'as' => 'create.learner'
+	));
+	Route::get('learner/delete/{id}', array(
+		'uses' => 'learnerController@delete',
+		'as' => 'create.learner'
+	));
 	Route::post('learner/create', array(
 		'uses' => 'learnerController@create',
 		'as' => 'create.learner'
@@ -266,6 +274,11 @@ Route::group(['middleware' => 'auth'], function(){
 			'as' => 'update.LearningCenter'
 		));
 		// Learning Center
+
+
+		// Birthday
+		Route::get('birthday', 'BirthdayController@index');
+		// Birthday
 
 		// Reports
 		Route::get('report/attendance', 'ReportController@attendance');
