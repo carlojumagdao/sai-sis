@@ -12,9 +12,9 @@ class dashboardController extends Controller
 {
     public function index(){
         // for the birthday section
-        $bdayLear = DB::select('SELECT COUNT(strLearCode) as bdayLear FROM tblLearner WHERE MONTH(datLearBirthDate) = MONTH(NOW()) AND DAY(datLearBirthDate) = DAY(NOW()) AND blLearDelete = 0');
-        $bdayCole = DB::select('SELECT COUNT(intColeId) as bdayCole FROM tblColearner WHERE MONTH(datColeBirthDate) = MONTH(NOW()) AND DAY(datColeBirthDate) = DAY(NOW()) AND blColeDelete = 0');
-        $bdayDonor = DB::select('SELECT COUNT(intDonorId) as bdayDonor FROM tblDonor WHERE MONTH(datDonorBDate) = MONTH(NOW()) AND DAY(datDonorBDate) = DAY(NOW()) AND blDonorDelete = 0');
+        $bdayLear = DB::select('SELECT COUNT(strLearCode) as bdayLear FROM tblLearner WHERE MONTH(datLearBirthDate) = MONTH(NOW()) AND DAY(datLearBirthDate) = DAY(DATE_ADD(NOW(), INTERVAL 8 HOUR)) AND blLearDelete = 0');
+        $bdayCole = DB::select('SELECT COUNT(intColeId) as bdayCole FROM tblColearner WHERE MONTH(datColeBirthDate) = MONTH(NOW()) AND DAY(datColeBirthDate) = DAY(DATE_ADD(NOW(), INTERVAL 8 HOUR)) AND blColeDelete = 0');
+        $bdayDonor = DB::select('SELECT COUNT(intDonorId) as bdayDonor FROM tblDonor WHERE MONTH(datDonorBDate) = MONTH(NOW()) AND DAY(datDonorBDate) = DAY(DATE_ADD(NOW(), INTERVAL 8 HOUR)) AND blDonorDelete = 0');
         foreach ($bdayLear as $value) {
             $countBdayLear = $value->bdayLear;
         }
