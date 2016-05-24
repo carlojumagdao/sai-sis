@@ -9,19 +9,22 @@ use App\Http\Controllers\Controller;
 
 class doneeController extends Controller
 {
-	protected $strSubjName;
+    protected $strSubjName;
 
     public function index($code){
-    	$infos = DB::select('SELECT strLearCode, strLearPicPath, strLearDream, CONCAT(strLearFname," ",strLearLname) AS Name, strLearVision as Vision FROM tblLearner WHERE blLearDelete = 0 AND strLearCode =?;',[$code]);
-    	$countStories = DB::select('SELECT COUNT(intStoId) AS total FROM tblStory WHERE strStoLearCode = ?',[$code]);
-    	$attPresent = DB::select('SELECT COUNT(*) AS present FROM tblAttendance WHERE strAttLearCode = ?',[$code]);
+        $infos = DB::select('SELECT strLearCode, strLearPicPath, strLearDream, CONCAT(strLearFname," ",strLearLname) AS Name, strLearVision as Vision FROM tblLearner WHERE blLearDelete = 0 AND md5(strLearCode) = ?;',[$code]);
+        if(!$infos){
+            return redirect()->guest('notfound');
+        }
+        $countStories = DB::select('SELECT COUNT(intStoId) AS total FROM tblStory WHERE strStoLearCode = ?',[$code]);
+        $attPresent = DB::select('SELECT COUNT(*) AS present FROM tblAttendance WHERE strAttLearCode = ?',[$code]);
         $attAbsent = DB::select('SELECT COUNT(s.intSDId) AS absent FROM tblLearner as l
             INNER JOIN tblSchoolDay as s ON l.intLearSesId = s.intSDSesId WHERE l.strLearCode = ? AND s.intSDId NOT IN (SELECT intAttSDId FROM tblAttendance WHERE strAttLearCode = ?) ORDER BY s.datSchoolDay DESC',[$code,$code]);
         foreach ($attPresent as $value) {
-        	$present = $value->present;
+            $present = $value->present;
         }
         foreach ($attAbsent as $value) {
-        	$absent = $value->absent;
+            $absent = $value->absent;
         }
         $intAttTotal = $absent + $present;
         if($intAttTotal == 0){
@@ -41,46 +44,46 @@ class doneeController extends Controller
         $highestSubj = DB::select("SELECT $strHighestGrade,intGrdLvl FROM tblGrade WHERE strGrdLearCode = ? AND blGrdDelete = 0 ORDER BY intGrdLvl",[$code]);
         $stories = DB::select('SELECT * FROM tblStory WHERE strStoLearCode = ?',[$code]);
 
-    	return view('donee.index', ['present'=>$present,'absent'=>$absent,'subjectName'=>$this->strSubjName,'subject' => $strHighestGrade,'highSubj' => $highestSubj,'grades' => $ProcGrades, 'stories' => $stories,'infos' => $infos,'countStories' => $countStories,'dblAttAverage' => round($dblAttAverage), 'dblGradeAverage' => $dblGradeAverage] );
+        return view('donee.index', ['present'=>$present,'absent'=>$absent,'subjectName'=>$this->strSubjName,'subject' => $strHighestGrade,'highSubj' => $highestSubj,'grades' => $ProcGrades, 'stories' => $stories,'infos' => $infos,'countStories' => $countStories,'dblAttAverage' => round($dblAttAverage), 'dblGradeAverage' => $dblGradeAverage] );
     }
 
     function getHighestSubjGrade($subjGrades){
-    	$dblHighestGrade = 0;
-    	foreach ($subjGrades as $value) {
-    		$dblHighestGrade = max($value->filipino,$value->math,$value->english,$value->science,$value->makabayan);
-    		if($dblHighestGrade == $value->filipino){
-    			$this->strSubjName = "Filipino";
-    			$strHighSubj = "dblGrdFilipino";
-    		} else if($dblHighestGrade == $value->math){
-    			$this->strSubjName = "Math";
-    			$strHighSubj = "dblGrdMath";
-    		} else if($dblHighestGrade == $value->science){
-    			$this->strSubjName = "Science";
-    			$strHighSubj = "dblGrdScience";
-    		} else if($dblHighestGrade == $value->english){
-    			$this->strSubjName = "English";
-    			$strHighSubj = "dblGrdEnglish";
-    		} else{
-    			$this->strSubjName = "Makabayan";
-    			$strHighSubj = "dblGrdMakabayan";
-    		}
-    	}
-    	return $strHighSubj;
+        $dblHighestGrade = 0;
+        foreach ($subjGrades as $value) {
+            $dblHighestGrade = max($value->filipino,$value->math,$value->english,$value->science,$value->makabayan);
+            if($dblHighestGrade == $value->filipino){
+                $this->strSubjName = "Filipino";
+                $strHighSubj = "dblGrdFilipino";
+            } else if($dblHighestGrade == $value->math){
+                $this->strSubjName = "Math";
+                $strHighSubj = "dblGrdMath";
+            } else if($dblHighestGrade == $value->science){
+                $this->strSubjName = "Science";
+                $strHighSubj = "dblGrdScience";
+            } else if($dblHighestGrade == $value->english){
+                $this->strSubjName = "English";
+                $strHighSubj = "dblGrdEnglish";
+            } else{
+                $this->strSubjName = "Makabayan";
+                $strHighSubj = "dblGrdMakabayan";
+            }
+        }
+        return $strHighSubj;
     }
 
     function getGradeAverage($ProcGrades){
-    	$dblAverage = 0;
-    	$intTotalCounter = 0;
-    	foreach ($ProcGrades as $grade) {
-    		$dblAverage += $grade->Average;
-    		$intTotalCounter++;
-    	}
+        $dblAverage = 0;
+        $intTotalCounter = 0;
+        foreach ($ProcGrades as $grade) {
+            $dblAverage += $grade->Average;
+            $intTotalCounter++;
+        }
         if($intTotalCounter == 0){
             $dblGradeAverage = 0;
         }else{
             $dblGradeAverage = $dblAverage / $intTotalCounter;
         }
-    	return round($dblGradeAverage);
+        return round($dblGradeAverage);
     }
 
     function ProcessGrades($grades){

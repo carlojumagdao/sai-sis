@@ -21,21 +21,21 @@ class donorController extends Controller
         return view('donor.index', ['donors' => $result]);
     }
     public function create(Request $request){
-    	$rules = array(
-    		'txtName' => 'required',
+        $rules = array(
+            'txtName' => 'required',
             'txtAmount' => 'required:digit',
-			'datBdate' => 'before:today',
+            'datBdate' => 'before:today',
             'txtEmail' => 'email',
-		);
-		$messages = [
-		    'required' => 'The :attribute field is required.',
-		];
-		$niceNames = array(
-		    'datBdate' => 'Birthdate',
-			'txtName' => 'Name',
+        );
+        $messages = [
+            'required' => 'The :attribute field is required.',
+        ];
+        $niceNames = array(
+            'datBdate' => 'Birthdate',
+            'txtName' => 'Name',
             'txtEmail' => 'Email',
             'txtAmount' => 'Pledge Amount'
-		);
+        );
         $validator = Validator::make($request->all(),$rules,$messages);
         $validator->setAttributeNames($niceNames); 
         if ($validator->fails()) {
@@ -77,20 +77,20 @@ class donorController extends Controller
     }  
     public function update(Request $request){
         $rules = array(
-			'txtName' => 'required',
-			'datBdate' => 'before:today',
+            'txtName' => 'required',
+            'datBdate' => 'before:today',
             'txtEmail' => 'email',
             'txtAmount' => 'required:digit',
-		);
-		$messages = [
-		    'required' => 'The :attribute field is required.',
-		];
-		$niceNames = array(
-		    'datBdate' => 'Birthdate',
-			'txtName' => 'Name',
+        );
+        $messages = [
+            'required' => 'The :attribute field is required.',
+        ];
+        $niceNames = array(
+            'datBdate' => 'Birthdate',
+            'txtName' => 'Name',
             'txtEmail' => 'Email',
             'txtAmount' => 'Pledge amount',
-		);
+        );
         $validator = Validator::make($request->all(),$rules,$messages);
         $validator->setAttributeNames($niceNames); 
         if ($validator->fails()) {
@@ -100,10 +100,10 @@ class donorController extends Controller
         if($Donor) {
             try{
                 $Donor->strDonorName = $request->input('txtName');
-            	$Donor->strDonorEmail = $request->input('txtEmail');
+                $Donor->strDonorEmail = $request->input('txtEmail');
                 $Donor->dblDonorAmount = $request->input('txtAmount');
-            	$Donor->datDonorBdate = $request->input('datBdate');
-            	$Donor->save();
+                $Donor->datDonorBdate = $request->input('datBdate');
+                $Donor->save();
             }catch (\Illuminate\Database\QueryException $e){
                 $errMess = $e->getMessage();
                 return Redirect::back()->withErrors($errMess);
@@ -117,7 +117,7 @@ class donorController extends Controller
     public function addSponsoredLearners(Request $request){
         $learners = $request->input('learners');
         $id = $request->input('code');
-        $counter = 0;	
+        $counter = 0;   
         foreach ($learners as $learner) {  
             $one[$counter] = array('intDLDonorId'=>$id, 'strDLLearCode'=>$learner);
             $counter++;
@@ -142,7 +142,7 @@ class donorController extends Controller
         $donorId = $request->input('donorId');
         try{
             $DonorLearner = DonorLearner::find($donLearId);
-	        $DonorLearner->delete();
+            $DonorLearner->delete();
         }catch (\Illuminate\Database\QueryException $e){
             $errMess = $e->getMessage();
             return view('donor.index')->withErrors($errMess);

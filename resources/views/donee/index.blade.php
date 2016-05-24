@@ -185,7 +185,7 @@
             </div>
         </div>
     </div>
-    <div class="row stories-div" id="page-wrap">
+    <div class="row stories-div hide" id="page-wrap">
         <h4 class="center"><b>Success stories</b></h4>
         @foreach($stories as $story)
             <div cs="col s12 m12 l12">
@@ -202,7 +202,7 @@
             &nbsp;
         </div>
     </div>
-    <div class="row grades-div" id="page-wrap">
+    <div class="row grades-div hide" id="page-wrap">
         <div class="col s12 m12 l12">
             <div class=" z-depth-4 card-panel card-content">
                 <h6 class="center"><b>School Grades</b></h6>
@@ -218,7 +218,7 @@
             &nbsp;
         </div>
     </div>
-    <div class="row dream-div" id="page-wrap">
+    <div class="row dream-div hide" id="page-wrap">
         <div cs="col s12 m12 l12">
             <h4 class="center"><b>2016 Dreams</b></h4>
             <div class=" z-depth-4 card-panel card-content">
@@ -234,7 +234,7 @@
             &nbsp;
         </div>
     </div>
-    <div class="row attendance-div" id="page-wrap">
+    <div class="row attendance-div hide" id="page-wrap">
         <div class="col s12 m12 l12">
             <div class=" z-depth-4 card-panel card-content">
                 <h6 class="center"><b>Attendance</b></h6>
@@ -246,7 +246,7 @@
             &nbsp;
         </div>
     </div>
-    <div class="row dream-part-div" id="page-wrap">
+    <div class="row dream-part-div hide" id="page-wrap">
         <div cs="col s12 m12 l12">
             <h5 class="center"><b>How can you be part of his/her dream?</b></h5>
                 Thank you for your intension of fulfilling our learners dream, Kindly send us your message on how you want this dream to come alive.
@@ -264,59 +264,56 @@
     <script src="{{ URL::asset('assets/js/plugins/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
     <script type="text/javascript">
         $(window).load(function() {
-            $( ".stories-div" ).hide();
-            $( ".grades-div" ).hide();
-            $( ".dream-div" ).hide();
-            $( ".attendance-div" ).hide();
             $( ".dream-part-div" ).hide();
         });
         $( ".stories" ).click(function() {
             $( ".main" ).hide(1000);
-            $( ".stories-div" ).show();
+            $( ".stories-div" ).removeClass("hide");
         });
         $( ".grades" ).click(function() {
             $( ".main" ).hide(1000);
-            $( ".grades-div" ).show();
+            $( ".grades-div" ).removeClass("hide");
         });
         $( ".dream" ).click(function() {
             $( ".main" ).hide(1000);
             $( ".dream-part-div" ).hide();
-            $( ".dream-div" ).show();   
+            $( ".dream-div" ).removeClass("hide");   
         });
         $( ".attendance" ).click(function() {
             $( ".main" ).hide(1000);
-            $( ".attendance-div" ).show();
+            $( ".attendance-div" ).removeClass("hide");
         });
         $( ".dream-part" ).click(function() {
             $( ".main" ).hide(1000);
-            $( ".dream-part-div" ).show();
+            $( ".dream-part-div" ).removeClass("hide");
         });
     </script>
     <script type="text/javascript">
         $( ".sto_back" ).click(function() {
           $( ".main" ).show(1000);
-          $( ".stories-div" ).hide();
+          $( ".stories-div" ).addClass("hide");
         });
         $( ".grades_back" ).click(function() {
           $( ".main" ).show(1000);
-          $( ".grades-div" ).hide();
+          $( ".grades-div" ).addClass("hide");
         });
         $( ".dream_back" ).click(function() {
           $( ".main" ).show(1000);
-          $( ".dream-div" ).hide();
+          $( ".dream-div" ).addClass("hide");
         });
         $( ".part_dream" ).click(function() {
           $( ".main" ).hide(1000);
-          $( ".dream-div" ).hide();
+          $( ".dream-div" ).addClass("hide");
+          $( ".dream-part-div" ).removeClass("hide");
           $( ".dream-part-div" ).show();
         });
         $( ".attendance_back" ).click(function() {
           $( ".main" ).show(1000);
-          $( ".attendance-div" ).hide();
+          $( ".attendance-div" ).addClass("hide");
         });
         $( ".home" ).click(function() {
           $( ".main" ).show(1000);
-          $( ".dream-part-div" ).hide();
+          $( ".dream-part-div" ).addClass("hide");
         });
     </script>
 </body>

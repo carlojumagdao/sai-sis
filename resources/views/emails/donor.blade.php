@@ -11,7 +11,8 @@ We are so grateful to have you as our partner in transforming the lives of Filip
 Click the link/s below to view your SAI learner's profile:
 <ul>
 @foreach($donees as $donee)
-	<li>{{$donee->learname}}: {{ url('donee/profile/'.$donee->learnerCode) }}</li>
+	<?php $token = md5($donee->learnerCode); ?>
+	<li>{{$donee->learname}}: {{ url('donee/profile/'.$token) }}</li>
 @endforeach
 </ul>
 

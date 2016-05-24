@@ -16,6 +16,9 @@ Route::group(['middleware' => 'auth'], function(){
 	Route::get('unauthorized', function(){
 		return view('unauthorized');
 	});
+	Route::get('notfound', function(){
+		return view('notfound');
+	});
 	Route::get('/', 'dashboardController@index');
 	
 
