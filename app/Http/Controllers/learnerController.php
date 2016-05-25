@@ -147,7 +147,8 @@ class learnerController extends Controller
             else if($request->file('pic')->isValid()) {
                 $destinationPath = 'assets/images/uploads'; // upload path
                 $extension = $request->file('pic')->getClientOriginalExtension(); // getting image extension
-                $fileName = rand(11111,99999).'.'.$extension; // renameing image
+                $date = date("Ymdhis");
+                $fileName = $date.'-'.rand(111111,999999).'.'.$extension; // renameing image
                 $request->file('pic')->move($destinationPath, $fileName); // uploading file to given path
                 try{
                     $Learner = Learner::find($request->input('txtCode'));
@@ -215,7 +216,8 @@ class learnerController extends Controller
             if ($request->file('pic')->isValid()) {
                 $destinationPath = 'assets/images/uploads'; // upload path
                 $extension = $request->file('pic')->getClientOriginalExtension(); // getting image extension
-                $fileName = rand(11111,99999).'.'.$extension; // renameing image
+                $date = date("Ymdhis");
+                $fileName = $date.'-'.rand(111111,999999).'.'.$extension; // renameing image
                 $request->file('pic')->move($destinationPath, $fileName); // uploading file to given path
                 try{
                     $Learner = new Learner();
