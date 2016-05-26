@@ -32,11 +32,17 @@ class dashboardController extends Controller
         foreach ($learners as $value) {
             $intLearners = $value->learners;
         }
-        $donors = DB::select('SELECT COUNT(intDonorId) AS donors, SUM(dblDonorAmount) AS amount FROM tblDonor');
-        foreach ($donors as $value) {
-            $intDonors = $value->donors;
-            $dblAmount = $value->amount;
+        $donors = DB::select('SELECT COUNT(intDonorId) AS donors, SUM(dblDonorAmount) AS amount FROM tblDonor WHERE blDonorDelete = 0');
+        if($donors){
+           foreach ($donors as $value) {
+                $intDonors = $value->donors;
+                $dblAmount = $value->amount;
+            } 
+        } else{
+            $intDonors = 0;
+            $dblAmount = 0;
         }
+        
         $grades = DB::select('SELECT (AVG(dblGrdEnglish) + AVG(dblGrdFilipino) + AVG(dblGrdMakabayan) + AVG(dblGrdMath) + AVG(dblGrdScience)) / 5 AS dblGrade FROM tblGrade WHERE blGrdDelete = 0 GROUP BY intGrdLvl;');
         $dblAverage = 0;
         foreach ($grades as $value) {

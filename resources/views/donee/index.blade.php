@@ -1,7 +1,7 @@
 <?php
     foreach($infos as $info){
         $strDonName = $info->Name;
-        $strDonPicPath = $info->strLearPicPath;
+        $image = "https://s3.amazonaws.com/sai-sis-files/learner/".$info->strLearPicPath."";
         $strDonVision = $info->Vision;
         if($info->strLearDream == null){
             $strDonDream = "No dream to show.";
@@ -135,7 +135,7 @@
     <div class="row main" id="page-wrap">
         <div class="col s12">
             <center>
-            <img id="user-pic" src="{{ URL::asset('assets/images/uploads/'.$strDonPicPath.'') }}" class= "circle responsive-img valign profile-image" width="200px" />
+            <img id="user-pic" src="{{$image}}" class= "circle responsive-img valign profile-image" width="200px" />
             </center>
         </div>
         <div class="center"><h4>{{$strDonName}}</h4></div>
