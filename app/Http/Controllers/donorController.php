@@ -58,9 +58,19 @@ class donorController extends Controller
     }
     public function delete(){
         $id = $_POST['id'];
-        $Donor = Donor::find($id);
-        $Donor->blDonorDelete = '1';
-        $Donor->save();
+        $DonorLearner = DB::select('SELECT intDLDonorId FROM tblDonorLearner WHERE intDLDonorId = ? AND blDLDelete = 0', [$id]);
+        if($DonorLearner ){
+            return Redirect::back()->withErrors("Cannot delete this record, because it is used by another record.");
+        } else{
+            try{
+                $Donor = Donor::find($id);
+                $Donor->blDonorDelete = '1';
+                $Donor->save(); 
+            }catch (\Illuminate\Database\QueryException $e){
+                $errMess = $e->getMessage();
+                return Redirect::back()->withErrors($errMess);
+            }
+        }
         //redirect
         return Redirect::back();
     }
