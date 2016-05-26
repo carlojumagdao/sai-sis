@@ -734,7 +734,7 @@
         level = document.getElementById("level").value;
         fname = document.getElementById("fname").value;
         $.ajax({
-            url: "learner/grade",
+            url: "{{ URL::to('learner/grade') }}",
             type:"POST",
             beforeSend: function (xhr) {
                 var token = $('meta[name="csrf_token"]').attr('content');
@@ -765,7 +765,7 @@
             }   
         }
         $.ajax({
-            url: "learner/attendance",
+            url: "{{ URL::to('learner/attendance') }}",
             type:"POST",
             beforeSend: function (xhr) {
                 var token = $('meta[name="csrf_token"]').attr('content');
@@ -789,7 +789,7 @@
             var code = document.getElementById("code").value;
             var fname = document.getElementById("fname").value;
             $.ajax({
-                url: "learner/grade/delete",
+                url: "{{ URL::to('learner/grade/delete') }}",
                 type:"POST",
                 beforeSend: function (xhr) {
                     var token = $('meta[name="csrf_token"]').attr('content');
@@ -817,7 +817,7 @@
             var code = document.getElementById("code").value;
             var fname = document.getElementById("fname").value;
             $.ajax({
-                url: "learner/stories/delete",
+                url: "{{ URL::to('learner/stories/delete') }}",
                 type:"POST",
                 beforeSend: function (xhr) {
                     var token = $('meta[name="csrf_token"]').attr('content');
@@ -845,7 +845,7 @@
             var code = document.getElementById("code").value;
             var fname = document.getElementById("fname").value;
             $.ajax({
-                url: "learner/attendance/delete",
+                url: "{{ URL::to('learner/attendance/delete') }}",
                 type:"POST",
                 beforeSend: function (xhr) {
                     var token = $('meta[name="csrf_token"]').attr('content');
@@ -872,7 +872,7 @@
         author = document.getElementById("sto-author").value;
         content = document.getElementById("sto-content").value;
         $.ajax({
-            url: "learner/stories",
+            url: "{{ URL::to('learner/stories') }}",
             type:"POST",
             beforeSend: function (xhr) {
                 var token = $('meta[name="csrf_token"]').attr('content');
@@ -897,7 +897,7 @@
         author = document.getElementById("sto-author-edit").value;
         content = document.getElementById("sto-content-edit").value;
         $.ajax({
-            url: "learner/stories/update",
+            url: "{{ URL::to('learner/stories/update') }}",
             type:"POST",
             beforeSend: function (xhr) {
                 var token = $('meta[name="csrf_token"]').attr('content');
@@ -936,4 +936,4 @@
         document.getElementById('sto-content-edit').value = content;
         $('#edit-story').openModal();
     });
-@stop  
+@stop   
