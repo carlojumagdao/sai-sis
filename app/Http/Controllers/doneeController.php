@@ -16,10 +16,10 @@ class doneeController extends Controller
         if(!$infos){
             return redirect()->guest('notfound');
         }
-        $countStories = DB::select('SELECT COUNT(intStoId) AS total FROM tblStory WHERE strStoLearCode = ?',[$code]);
-        $attPresent = DB::select('SELECT COUNT(*) AS present FROM tblAttendance WHERE strAttLearCode = ?',[$code]);
+        $countStories = DB::select('SELECT COUNT(intStoId) AS total FROM tblStory WHERE md5(strStoLearCode) = ?',[$code]);
+        $attPresent = DB::select('SELECT COUNT(*) AS present FROM tblAttendance WHERE md5(strAttLearCode) = ?',[$code]);
         $attAbsent = DB::select('SELECT COUNT(s.intSDId) AS absent FROM tblLearner as l
-            INNER JOIN tblSchoolDay as s ON l.intLearSesId = s.intSDSesId WHERE l.strLearCode = ? AND s.intSDId NOT IN (SELECT intAttSDId FROM tblAttendance WHERE strAttLearCode = ?) ORDER BY s.datSchoolDay DESC',[$code,$code]);
+            INNER JOIN tblSchoolDay as s ON l.intLearSesId = s.intSDSesId WHERE l.strLearCode = ? AND s.intSDId NOT IN (SELECT intAttSDId FROM tblAttendance WHERE md5(strAttLearCode) = ?) ORDER BY s.datSchoolDay DESC',[$code,$code]);
         foreach ($attPresent as $value) {
             $present = $value->present;
         }
@@ -34,15 +34,15 @@ class doneeController extends Controller
         }
         
 
-        $grades = DB::select('SELECT AVG(dblGrdFilipino) as dblGrdFilipino,AVG(dblGrdMath) as dblGrdMath,AVG(dblGrdScience) as dblGrdScience,AVG(dblGrdEnglish) as dblGrdEnglish,AVG(dblGrdMakabayan) as dblGrdMakabayan, intGrdLvl, intGrdId FROM tblGrade WHERE strGrdLearCode = ? AND blGrdDelete = 0 GROUP BY intGrdLvl ORDER BY intGrdLvl',[$code]);
+        $grades = DB::select('SELECT AVG(dblGrdFilipino) as dblGrdFilipino,AVG(dblGrdMath) as dblGrdMath,AVG(dblGrdScience) as dblGrdScience,AVG(dblGrdEnglish) as dblGrdEnglish,AVG(dblGrdMakabayan) as dblGrdMakabayan, intGrdLvl, intGrdId FROM tblGrade WHERE md5(strGrdLearCode) = ? AND blGrdDelete = 0 GROUP BY intGrdLvl ORDER BY intGrdLvl',[$code]);
         
-        $subject = DB::select('SELECT AVG(dblGrdFilipino) as filipino, AVG(dblGrdEnglish) as english, AVG(dblGrdMath) as math, AVG(dblGrdScience) as science, AVG(dblGrdMakabayan) as makabayan FROM tblGrade WHERE strGrdLearCode = ? AND blGrdDelete = 0 ORDER BY intGrdLvl',[$code]);
+        $subject = DB::select('SELECT AVG(dblGrdFilipino) as filipino, AVG(dblGrdEnglish) as english, AVG(dblGrdMath) as math, AVG(dblGrdScience) as science, AVG(dblGrdMakabayan) as makabayan FROM tblGrade WHERE md5(strGrdLearCode) = ? AND blGrdDelete = 0 ORDER BY intGrdLvl',[$code]);
 
         $ProcGrades = $this->ProcessGrades($grades);
         $dblGradeAverage = $this->getGradeAverage($ProcGrades);
         $strHighestGrade = $this->getHighestSubjGrade($subject);
         $highestSubj = DB::select("SELECT $strHighestGrade,intGrdLvl FROM tblGrade WHERE strGrdLearCode = ? AND blGrdDelete = 0 ORDER BY intGrdLvl",[$code]);
-        $stories = DB::select('SELECT * FROM tblStory WHERE strStoLearCode = ?',[$code]);
+        $stories = DB::select('SELECT * FROM tblStory WHERE md5(strStoLearCode) = ?',[$code]);
 
         return view('donee.index', ['present'=>$present,'absent'=>$absent,'subjectName'=>$this->strSubjName,'subject' => $strHighestGrade,'highSubj' => $highestSubj,'grades' => $ProcGrades, 'stories' => $stories,'infos' => $infos,'countStories' => $countStories,'dblAttAverage' => round($dblAttAverage), 'dblGradeAverage' => $dblGradeAverage] );
     }
