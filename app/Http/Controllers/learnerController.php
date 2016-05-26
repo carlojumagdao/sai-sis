@@ -8,6 +8,8 @@ use App\Grade AS Grade;
 use App\Attendance AS Attendance;
 use App\Story AS Story;
 use DB;
+use Storage;
+use AWS;
 use Validator;
 use Redirect;
 use App\Http\Requests;
@@ -150,6 +152,15 @@ class learnerController extends Controller
                 $date = date("Ymdhis");
                 $fileName = $date.'-'.rand(111111,999999).'.'.$extension; // renameing image
                 $request->file('pic')->move($destinationPath, $fileName); // uploading file to given path
+                $s3 = AWS::createClient('s3');
+                $s3->putObject(array(
+                    'Bucket'     => 'sai-sis-files',
+                    'Key'        => 'learner/'.$fileName,
+                    'SourceFile' => 'assets/images/uploads/'.$fileName,
+                    'ACL'        => 'public-read'
+                ));
+                $file = $destinationPath.'/'.$fileName;
+                unlink($file);
                 try{
                     $Learner = Learner::find($request->input('txtCode'));
                     if($Learner){
@@ -218,7 +229,16 @@ class learnerController extends Controller
                 $extension = $request->file('pic')->getClientOriginalExtension(); // getting image extension
                 $date = date("Ymdhis");
                 $fileName = $date.'-'.rand(111111,999999).'.'.$extension; // renameing image
-                $request->file('pic')->move($destinationPath, $fileName); // uploading file to given path
+                $request->file('pic')->move($destinationPath, $fileName); // uploading 
+                $s3 = AWS::createClient('s3');
+                $s3->putObject(array(
+                    'Bucket'     => 'sai-sis-files',
+                    'Key'        => 'learner/'.$fileName,
+                    'SourceFile' => 'assets/images/uploads/'.$fileName,
+                    'ACL'        => 'public-read'
+                ));
+                $file = $destinationPath.'/'.$fileName;
+                unlink($file);
                 try{
                     $Learner = new Learner();
                     $Learner->strLearCode = $request->input('txtCode');
@@ -540,5 +560,5 @@ class learnerController extends Controller
             $strNewCode = $strNewCode."0";
         }
         return $strNewCode;
-    }
+    } 
 }

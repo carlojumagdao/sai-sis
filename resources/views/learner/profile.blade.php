@@ -17,7 +17,7 @@
         $gender = $info->blLearGender;
         $school = $info->intLearSchId;
         $bdate = $info->datLearBirthDate;
-        $picpath = $info->strLearPicPath;
+        $image = "https://s3.amazonaws.com/sai-sis-files/learner/".$info->strLearPicPath."";
         $strDream = $info->strLearDream;
         $vision = $info->strLearVision;
         $contact = $info->strLearContact;
@@ -262,7 +262,7 @@
                                                             <div class="row">
                                                                 <div class="col s12 m12 l4">
                                                                     <div class="card-panel2 tooltipped" data-position="top" data-delay="50" data-tooltip="Learner picture">
-                                                                        <img id="cand-pic" src="{{ URL::asset('assets/images/uploads/'.$picpath.'') }}" width="280px" height="280" /> 
+                                                                        <img id="cand-pic" src="{{$image}}" width="280px" height="280" /> 
                                                                     </div>
                                                                 </div>
                                                                 <div class="input-field col s12 m12 l7">

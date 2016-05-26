@@ -11,7 +11,8 @@
         "cviebrock/image-validator": "^2.0",
         "barryvdh/laravel-snappy": "^0.3.0",
         "barryvdh/laravel-dompdf": " 0.6.*",
-        "ext-gd": "*"
+        "ext-gd": "*",
+        "aws/aws-sdk-php-laravel": "~3.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
