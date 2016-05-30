@@ -151,6 +151,11 @@
             </div>
         </div>
     </div>
+    <div id="generate-message" class="modal bottom-sheet">
+        <div class="modal-content">
+            <div class="content-message"></div>
+        </div>
+    </div>
     <!--end container-->
 </section>
 <!-- END CONTENT -->
@@ -208,7 +213,7 @@
             }
         }); //end of ajax
     });
-    
+
     $(".generate").click(function(){
         var id = $(this).parent().parent().find('.id').text(); 
         $.ajax({
