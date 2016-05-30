@@ -60,12 +60,12 @@
             <tr>
                 <td>&nbsp;{{$intCounter}}</td>
                 <td>&nbsp;{{$learner->Name}}</td>
-                <td><center>{{$learner->dblGrdFilipino}}</center></td>
-                <td><center>{{$learner->dblGrdEnglish}}</center></td>
-                <td><center>{{$learner->dblGrdMath}}</center></td>
-                <td><center>{{$learner->dblGrdScience}}</center></td>
-                <td><center>{{$learner->dblGrdMakabayan}}</center></td>
-                <td><center>{{$dblAverage}}%</center></td>
+                <td><center>{{round($learner->dblGrdFilipino)}}</center></td>
+                <td><center>{{round($learner->dblGrdEnglish)}}</center></td>
+                <td><center>{{round($learner->dblGrdMath)}}</center></td>
+                <td><center>{{round($learner->dblGrdScience)}}</center></td>
+                <td><center>{{round($learner->dblGrdMakabayan)}}</center></td>
+                <td><center>{{round($dblAverage)}}%</center></td>
             </tr>
             <?php $intCounter++ ?>
         @endforeach

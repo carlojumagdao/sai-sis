@@ -41,7 +41,7 @@ class doneeController extends Controller
         $ProcGrades = $this->ProcessGrades($grades);
         $dblGradeAverage = $this->getGradeAverage($ProcGrades);
         $strHighestGrade = $this->getHighestSubjGrade($subject);
-        $highestSubj = DB::select("SELECT $strHighestGrade,intGrdLvl FROM tblGrade WHERE strGrdLearCode = ? AND blGrdDelete = 0 ORDER BY intGrdLvl",[$code]);
+        $highestSubj = DB::select("SELECT $strHighestGrade,intGrdLvl FROM tblGrade WHERE md5(strGrdLearCode) = ? AND blGrdDelete = 0 GROUP BY intGrdLvl ORDER BY intGrdLvl",[$code]);
         $stories = DB::select('SELECT * FROM tblStory WHERE md5(strStoLearCode) = ?',[$code]);
 
         return view('donee.index', ['present'=>$present,'absent'=>$absent,'subjectName'=>$this->strSubjName,'subject' => $strHighestGrade,'highSubj' => $highestSubj,'grades' => $ProcGrades, 'stories' => $stories,'infos' => $infos,'countStories' => $countStories,'dblAttAverage' => round($dblAttAverage), 'dblGradeAverage' => $dblGradeAverage] );
