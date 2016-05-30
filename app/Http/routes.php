@@ -87,6 +87,10 @@ Route::group(['middleware' => 'auth'], function(){
 		'uses' => 'donorController@EmailSend',
 		'as' => 'send.donor'
 	));
+	Route::post('donor/email/generate', array(
+		'uses' => 'donorController@EmailGenerate',
+		'as' => 'generate.donor'
+	));
 	Route::post('donor/sponsoredlearners', array(
 		'uses' => 'donorController@addSponsoredLearners',
 		'as' => 'sponsored.donor'

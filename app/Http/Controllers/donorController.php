@@ -179,6 +179,12 @@ class donorController extends Controller
             $message->to("$email")->subject('Your Silid Aralan Learner');
         });
     }
+    public function EmailGenerate(Request $request)
+    {   
+        $id = $request->input('id');
+        $donee = DB::select('SELECT d.strDonorName AS donorName,d.strDonorEmail AS email, dl.strDLLearCode as learnerCode, CONCAT(l.strLearFname," ",l.strLearLname) AS learname FROM tblDonorLearner AS dl INNER JOIN tblDonor as d ON d.intDonorId = dl.intDLDonorId INNER JOIN tblLearner AS l ON dl.strDLLearCode = l.strLearCode WHERE d.intDonorId = ?',[$id]);
+        return view('emails.donor', ['donees' => $donee]);
+    }
 }
 
 

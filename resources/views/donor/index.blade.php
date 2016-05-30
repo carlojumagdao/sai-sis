@@ -63,8 +63,10 @@
                                         <a href="donor/edit/{{$donor->intDonorId}}" class='waves-effect waves-light btn-floating btn-small orange edit' data-position='top' data-tooltip='Edit'><i class='mdi-content-create'></i></a>
 
                                         <a href="#send" class="waves-effect waves-light btn-floating btn-small blue send" data-position='top' data-tooltip='Send'><i class='mdi-content-send'></i></a>
-                                        
+                                        <br>
                                         <a href="#delete" class="waves-effect waves-light btn-floating btn-small red delete" data-position='top' data-tooltip='Delete'><i class='mdi-action-delete'></i></a>
+
+                                        <a href="#generate" class="waves-effect waves-light btn-floating btn-small green generate" data-position='top' data-tooltip='Generate'><i class='mdi-content-inbox'></i></a>
                                         </td>
                                     </tr>
                                     <?php $intCounter++ ?>
@@ -203,6 +205,28 @@
             },error:function(){ 
                 $('#email-loader').closeModal();
                 Materialize.toast('Sending Failed', 4000); 
+            }
+        }); //end of ajax
+    });
+    
+    $(".generate").click(function(){
+        var id = $(this).parent().parent().find('.id').text(); 
+        $.ajax({
+            url: "{{ URL::to('donor/email/generate') }}",
+            type:"POST",
+            beforeSend: function (xhr) {
+                var token = $('meta[name="csrf_token"]').attr('content');
+                if (token) {
+                      return xhr.setRequestHeader('X-CSRF-TOKEN', token);
+                }
+            },
+            data: { id:id },
+            success:function(data){
+                $( ".content-message" ).empty( data );
+                $( ".content-message" ).append( data );
+                $('#generate-message').openModal();
+            },error:function(){ 
+                alert('Something went wrong: Please check if this donor has a sponsored learner.');
             }
         }); //end of ajax
     });
