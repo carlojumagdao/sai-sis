@@ -68,7 +68,6 @@ class ReportController extends Controller
             $intLevel = "All";    
             $pdf = PDF::loadView('pdf.allgrades', ['learners' => $learners,'coles'=>$coles,'sessions'=>$sessions,'schools'=>$schools,'programs'=>$programs,'quarter'=>$intQuarter,'level'=>$intLevel]);
             return $pdf->stream();
-            break;
         } else if($intQuarter == 5){
         	$learners = DB::select('SELECT CONCAT(l.strLearFname," ", l.strLearLname) as Name, 	 AVG(g.dblGrdFilipino) 	 as dblGrdFilipino,
 					    AVG(g.dblGrdMath) 		as dblGrdMath,
