@@ -145,7 +145,8 @@
 
 <!-- START CONTENT -->
     @section('title-page')
-        {{"Learner: $fname $lname ($code)"}}
+        {{"Learner: $fname $lname ($code)"}}<br>
+        <span style="font-size: 15px">Donor: {{$donorName}}</span>
     @stop  
     <!--start container-->
     <div class="container">

@@ -75,7 +75,15 @@ class learnerController extends Controller
         $attPresent = DB::select('SELECT COUNT(*) AS present FROM tblAttendance WHERE strAttLearCode = ?',[$strGotCode]);
         $attAbsent = DB::select('SELECT COUNT(s.intSDId) AS absent FROM tblLearner as l
             INNER JOIN tblSchoolDay as s ON l.intLearSesId = s.intSDSesId WHERE l.strLearCode = ? AND s.intSDId NOT IN (SELECT intAttSDId FROM tblAttendance WHERE strAttLearCode = ?) ORDER BY s.datSchoolDay DESC',[$strGotCode,$strGotCode]);
-        return view('learner.profile',['absent' => $attAbsent,'present' => $attPresent,'infos' => $result, 'stories' => $stories,'schDays' => $schDays, 'days' => $attendance, 'grades' => $procGrades, 'ses_options' => $ses_options, 'sch_options' => $sch_options]);
+        $donor = DB::select('SELECT d.strDonorName FROM tblDonor AS d 
+                LEFT JOIN tblDonorLearner AS dl ON d.intDonorId = dl.intDLDonorId
+                LEFT JOIN tblLearner AS l ON l.strLearCode = dl.strDLLearCode
+            WHERE l.strLearCode = ?',[$strGotCode]);
+        $donorName = "None";
+        foreach ($donor as $value) {
+            $donorName = $value->strDonorName;
+        }
+        return view('learner.profile',['absent' => $attAbsent,'present' => $attPresent,'infos' => $result, 'stories' => $stories,'schDays' => $schDays, 'days' => $attendance, 'grades' => $procGrades, 'ses_options' => $ses_options, 'sch_options' => $sch_options,'donorName' => $donorName]);
     }
     public function delete(Request $request, $id){
 

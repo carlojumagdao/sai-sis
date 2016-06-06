@@ -30,7 +30,7 @@ class ReportController extends Controller
     	$intLevel = $request->input('txtLevel');
 
     	$rules = array(
-            'txtLevel' => 'required|integer|between:1,12',
+            'txtLevel' => 'required|integer|between:0,12',
             'selQuarter' => 'required',
             'selSession' => 'required'
         );
@@ -52,7 +52,24 @@ class ReportController extends Controller
         $schools = DB::select('SELECT sc.strSchName FROM tblSchool AS sc LEFT JOIN tblSession AS s ON s.intSesSchId = sc.intSchId WHERE s.intSesId = ?',[$intSesId]);
         $programs = DB::select('SELECT p.strProgName FROM tblProgram AS P LEFT JOIN tblSession AS s ON p.intProgId = s.intSesProgId WHERE s.intSesId = ?',[$intSesId]);
         $coles = DB::select('SELECT CONCAT(c.strColeFname," ",c.strColeLname) AS Name FROM tblColearner AS c LEFT JOIN tblSession AS s ON s.intSesColeId = c.intColeId WHERE s.intSesId = ? ',[$intSesId]);
-        if($intQuarter == 5){
+        if($intLevel == 0){
+            $learners = DB::select('SELECT CONCAT(l.strLearFname," ", l.strLearLname) as Name,   g.intGrdLvl        as intGrdLvl,
+                        g.intGrdQtr        as intGrdQtr,
+                        g.dblGrdFilipino   as dblGrdFilipino,
+                        g.dblGrdMath       as dblGrdMath,
+                        g.dblGrdScience    as dblGrdScience,
+                        g.dblGrdEnglish    as dblGrdEnglish,
+                        g.dblGrdMakabayan  as dblGrdMakabayan
+                FROM tblGrade AS g
+                        LEFT JOIN tblLearner AS l ON l.strLearCode = g.strGrdLearCode
+                        LEFT JOIN tblSession AS s ON s.intSesId = l.intLearSesId
+                        WHERE s.intSesId = ?;',[$intSesId]);
+            $intQuarter = "All";  
+            $intLevel = "All";    
+            $pdf = PDF::loadView('pdf.allgrades', ['learners' => $learners,'coles'=>$coles,'sessions'=>$sessions,'schools'=>$schools,'programs'=>$programs,'quarter'=>$intQuarter,'level'=>$intLevel]);
+            return $pdf->stream();
+            break;
+        } else if($intQuarter == 5){
         	$learners = DB::select('SELECT CONCAT(l.strLearFname," ", l.strLearLname) as Name, 	 AVG(g.dblGrdFilipino) 	 as dblGrdFilipino,
 					    AVG(g.dblGrdMath) 		as dblGrdMath,
 			            AVG(g.dblGrdScience) 	as dblGrdScience,
