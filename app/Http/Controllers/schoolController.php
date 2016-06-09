@@ -87,9 +87,8 @@ class schoolController extends Controller
     public function update(Request $request){
         $rules = array(
             'txtSchool' => 'required|before:today',
-            'txtCoordinator' => 'required',
             'selArea' => 'required',
-            'txtContact' => 'required|digits:11'
+            'txtContact' => 'digits:11'
         );
         $messages = [
             'required' => 'The :attribute field is required.',
