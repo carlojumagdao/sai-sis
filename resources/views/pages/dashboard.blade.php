@@ -116,7 +116,7 @@
                     <div class="card">
                         <div class="card-content blue-grey white-text">
                             <p style="font-size: 18px;" class="card-stats-title center"><i class="mdi-editor-attach-money"></i> Total Donations</p>
-                            <h4 style="font-weight: bold; margin: 1.5% 1% 1% 1.5%" class="card-stats-number center">₱ {{$dblAmount}}</h4>
+                            <h4 style="font-weight: bold; margin: 1.5% 1% 1% 1.5%" class="card-stats-number center">₱ {{number_format($dblAmount)}}</h4>
                         </div>
                         <div class="card-action  blue-grey darken-2">
                             <div id="profit-tristate"></div>

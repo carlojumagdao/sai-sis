@@ -9,10 +9,13 @@
 @section('title')
     {{"School"}}
 @stop   
+@section('style')
+    <link rel="stylesheet" href="{{ URL::asset('assets/css/table.css') }}">
+@stop
 @section('content')
 <!-- START CONTENT -->
     @section('title-page')
-        {{"School"}}
+        {{"School"}} <a href="#add-school" class="modal-trigger waves-effect btn" style="font-size: 15px;">Add New</a>
     @stop  
     <!--start container-->
     <div class="container">
@@ -34,14 +37,14 @@
                     <blockquote>{{ Session::get('message') }}</blockquote>
                 </div>
             @endif
-                <div class="col s12 m7">
-                    <div class="card white">
-                        <div class="card-content black-text" >
-                            <table class="bordered" id="list">
+                <div class="col s12 m12">
+                    <div class="row">
+                        <div id="admin" class="col s12">
+                            <div class="card material-table">
+                                <table id="datatable">
                                 <thead>
                                     <tr>
-                                        <th data-field="id">#</th>
-                                        <th data-field="schoo">School</th>
+                                        <th data-field="schoo">#. School</th>
                                         <th data-field="coordinator">Coordinator</th>
                                         <th data-field="contact">Location</th>
                                         <th data-field="price">Action</th>
@@ -51,14 +54,13 @@
                                 <?php $intCounter = 1 ?>
                                 @foreach($schools as $school)
                                     <tr>
-                                        <td class = "id hide">{{$school->intSchId}}</td>
-                                        <td>{{$intCounter}}</td>
                                         <td>
-                                            {{$school->strSchName}}
+                                            {{$intCounter.". ".$school->strSchName}}
                                         </td>
                                         <td>
                                             {{$school->strSchCoorName}}
                                         </td>
+                                        <td class = "id hide">{{$school->intSchId}}</td>
                                         <td>
                                             {{$school->strLCLocation}}
                                         </td>
@@ -70,82 +72,83 @@
                                     <?php $intCounter++ ?>
                                 @endforeach
                                 </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="col s12 m5">
-                    <div class="card white">
-                        <div class="card-content black-text">
-                            <span class="card-title black-text">Add School</span>
-                            <div class="row">
-                                {!! Form::open( array(
-                                    'method' => 'post',
-                                    'id' => 'form-add-setting',
-                                    'class' => 'col s12',
-                                    'action' => 'schoolController@create'
-                                ) ) !!}
-                                <div class="row">
-                                    <div class="input-field col s12">
-                                        {!! Form::text
-                                            ('School', '', array(
-                                            'id' => 'school',
-                                            'placeholder' => 'School Name',
-                                            'maxlength' => 50,
-                                            'name' => 'txtSchool',
-                                            'required' => true,)) 
-                                        !!}
-                                        {!! Form::label( 'school', 'School:' ) !!}
-                                    </div>
-
-                                    <div class="input-field col s12">
-                                        {!! Form::select('selArea', $area_options,  ['id' => 'area']
-                                        ) !!}
-                                        {!! Form::label( 'area', 'SAI Area:' ) !!}
-                                    </div>
-                                    <div class="input-field col s12">
-                                        {!! Form::text
-                                            ('Principal', '', array(
-                                            'id' => 'principal',
-                                            'placeholder' => 'Principal Name',
-                                            'maxlength' => 50,
-                                            'name' => 'txtPrincipal',)) 
-                                        !!}
-                                        {!! Form::label( 'principal', 'Principal:' ) !!}
-                                    </div>
-                                    <div class="input-field col s12">
-                                        {!! Form::text
-                                            ('Coordinator', '', array(
-                                            'id' => 'coordinator',
-                                            'placeholder' => 'Coordinator Name',
-                                            'maxlength' => 50,
-                                            'name' => 'txtCoordinator',)) 
-                                        !!}
-                                        {!! Form::label( 'coordinator', 'Coordinator:' ) !!}
-                                    </div>
-                                    <div class="input-field col s12">
-                                        {!! Form::text
-                                            ('Contact', '', array(
-                                            'id' => 'contact',
-                                            'placeholder' => 'Contact No.',
-                                            'maxlength' => 30,
-                                            'name' => 'txtContact',)) 
-                                        !!}
-                                        {!! Form::label( 'contact', 'Contact:' ) !!}
-                                    </div>
-                                    <div class="input-field col s12">
-                                        {!! Form::submit( 'Submit', array(
-                                            'id' => 'btn-add-setting',
-                                            'class' => 'btn'
-                                            )) 
-                                        !!}
-                                    </div>
-                                </div>
-                                {!! Form::close() !!}
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div id="add-school" class="modal">
+        <div class="modal-content">
+            <div class="row">
+                {!! Form::open( array(
+                    'method' => 'post',
+                    'id' => 'form-add-setting',
+                    'class' => 'col s12',
+                    'action' => 'schoolController@create'
+                ) ) !!}
+                <div class="row">
+                    <div class="input-field col s12">
+                        <h5>Add School</h5>
+                    </div>
+                    <div class="input-field col s12">
+                        {!! Form::text
+                            ('School', '', array(
+                            'id' => 'school',
+                            'placeholder' => 'School Name',
+                            'maxlength' => 50,
+                            'name' => 'txtSchool',
+                            'required' => true,)) 
+                        !!}
+                        {!! Form::label( 'school', 'School:' ) !!}
+                    </div>
+
+                    <div class="input-field col s12">
+                        {!! Form::select('selArea', $area_options,  ['id' => 'area']
+                        ) !!}
+                        {!! Form::label( 'area', 'SAI Area:' ) !!}
+                    </div>
+                    <div class="input-field col s12">
+                        {!! Form::text
+                            ('Principal', '', array(
+                            'id' => 'principal',
+                            'placeholder' => 'Principal Name',
+                            'maxlength' => 50,
+                            'name' => 'txtPrincipal',)) 
+                        !!}
+                        {!! Form::label( 'principal', 'Principal:' ) !!}
+                    </div>
+                    <div class="input-field col s12">
+                        {!! Form::text
+                            ('Coordinator', '', array(
+                            'id' => 'coordinator',
+                            'placeholder' => 'Coordinator Name',
+                            'maxlength' => 50,
+                            'name' => 'txtCoordinator',)) 
+                        !!}
+                        {!! Form::label( 'coordinator', 'Coordinator:' ) !!}
+                    </div>
+                    <div class="input-field col s12">
+                        {!! Form::text
+                            ('Contact', '', array(
+                            'id' => 'contact',
+                            'placeholder' => 'Contact No.',
+                            'maxlength' => 30,
+                            'name' => 'txtContact',)) 
+                        !!}
+                        {!! Form::label( 'contact', 'Contact:' ) !!}
+                    </div>
+                    <div class="input-field col s12">
+                        {!! Form::submit( 'Submit', array(
+                            'id' => 'btn-add-setting',
+                            'class' => 'btn'
+                            )) 
+                        !!}
+                    </div>
+                </div>
+                {!! Form::close() !!}
             </div>
         </div>
     </div>

@@ -9,10 +9,13 @@
 @section('title')
     {{"Colearner"}}
 @stop   
+@section('style')
+    <link rel="stylesheet" href="{{ URL::asset('assets/css/table.css') }}">
+@stop
 @section('content')
 <!-- START CONTENT -->
     @section('title-page')
-        {{"Colearner"}}
+        {{"Colearner"}} <a href="#add-cole" class="modal-trigger waves-effect btn" style="font-size: 15px;">Add New</a>
     @stop  
     <!--start container-->
     <div class="container">
@@ -34,14 +37,14 @@
                     <blockquote>{{ Session::get('message') }}</blockquote>
                 </div>
             @endif
-                <div class="col s12 m7">
-                    <div class="card white">
-                        <div class="card-content black-text" >
-                            <table class="bordered" id="list">
+                <div class="col s12 m12">
+                    <div class="row">
+                    <div id="admin" class="col s12">
+                        <div class="card material-table">
+                            <table id="datatable">
                                 <thead>
                                     <tr>
-                                        <th data-field="id">#</th>
-                                        <th data-field="schoo">First Name</th>
+                                        <th data-field="schoo">#. First Name</th>
                                         <th data-field="coordinator">Last Name</th>
                                         <th data-field="contact">Contact</th>
                                         <th data-field="price">Action</th>
@@ -51,14 +54,14 @@
                                 <?php $intCounter = 1 ?>
                                 @foreach($coles as $cole)
                                     <tr>
-                                        <td class = "id hide">{{$cole->intColeId}}</td>
-                                        <td>{{$intCounter}}</td>
                                         <td>
-                                            {{$cole->strColeFname}}
+                                            {{$intCounter.". ".$cole->strColeFname}}
                                         </td>
                                         <td>
                                             {{$cole->strColeLname}}
                                         </td>
+
+                                        <td class = "id hide">{{$cole->intColeId}}</td>
                                         <td>
                                             {{$cole->strColeContact}}
                                         </td>
@@ -70,85 +73,87 @@
                                     <?php $intCounter++ ?>
                                 @endforeach
                                 </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="col s12 m5">
-                    <div class="card white">
-                        <div class="card-content black-text">
-                            <span class="card-title black-text">Add Colearner</span>
-                            <div class="row">
-                                {!! Form::open( array(
-                                    'method' => 'post',
-                                    'id' => 'form-add-setting',
-                                    'class' => 'col s12',
-                                    'action' => 'coleController@create'
-                                ) ) !!}
-                                <div class="row">
-                                    <div class="input-field col s12">
-                                        {!! Form::text
-                                            ('Fname', '', array(
-                                            'id' => 'fname',
-                                            'placeholder' => 'Juan',
-                                            'maxlength' => 50,
-                                            'name' => 'txtFname',
-                                            'class' => 'validate',
-                                            'required' => true,)) 
-                                        !!}
-                                        {!! Form::label( 'fname', 'First Name:' ) !!}
-                                    </div>
-                                    <div class="input-field col s12">
-                                        {!! Form::text
-                                            ('Lname', '', array(
-                                            'id' => 'lname',
-                                            'placeholder' => 'Dela Cruz',
-                                            'maxlength' => 50,
-                                            'class' => 'validate',
-                                            'name' => 'txtLname',)) 
-                                        !!}
-                                        {!! Form::label( 'lname', 'Last Name:' ) !!}
-                                    </div>
-                                    
-                                    <div class="input-field col s12">
-                                        {!! Form::text
-                                            ('Contact', '', array(
-                                            'id' => 'contact',
-                                            'placeholder' => '09000000000',
-                                            'maxlength' => 50,
-                                            'name' => 'txtContact',
-                                            'class' => 'validate',
-                                            'required' => true,)) 
-                                        !!}
-                                        {!! Form::label( 'contact', 'Contact:' ) !!}
-                                    </div>
-                                    <div class="input-field col s12">
-                                        <p>
-                                            <input name="rdGender" type="radio" id="test1" value = "1"/>
-                                            <label for="test1" class="radlabel">Male</label>
-                                        </p>
-                                        <p>    
-                                            <input name="rdGender" type="radio" id="test2" value="0" />
-                                            <label for="test2" class="radlabel">Female</label>
-                                        </p>
-                                    </div>
-                                    <div class="input-field col s12">
-                                        <label for="date">Birthdate</label>
-                                        <input id="date" type="date" class="datepicker" name="datBdate">
-                                    </div>
-                                    <div class="input-field col s12">
-                                        {!! Form::submit( 'Submit', array(
-                                            'id' => 'btn-add-setting',
-                                            'class' => 'btn'
-                                            )) 
-                                        !!}
-                                    </div>
-                                </div>
-                                {!! Form::close() !!}
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div id="add-cole" class="modal">
+        <div class="modal-content">
+            <div class="row">
+                {!! Form::open( array(
+                    'method' => 'post',
+                    'id' => 'form-add-setting',
+                    'class' => 'col s12',
+                    'action' => 'coleController@create'
+                ) ) !!}
+                <div class="row">
+                    <div class="input-field col s12">
+                        <h5>Add Colearner</h5>
+                    </div>
+                    <div class="input-field col s12">
+                        {!! Form::text
+                            ('Fname', '', array(
+                            'id' => 'fname',
+                            'placeholder' => 'Juan',
+                            'maxlength' => 50,
+                            'name' => 'txtFname',
+                            'class' => 'validate',
+                            'required' => true,)) 
+                        !!}
+                        {!! Form::label( 'fname', 'First Name:' ) !!}
+                    </div>
+                    <div class="input-field col s12">
+                        {!! Form::text
+                            ('Lname', '', array(
+                            'id' => 'lname',
+                            'placeholder' => 'Dela Cruz',
+                            'maxlength' => 50,
+                            'class' => 'validate',
+                            'name' => 'txtLname',)) 
+                        !!}
+                        {!! Form::label( 'lname', 'Last Name:' ) !!}
+                    </div>
+                    
+                    <div class="input-field col s12">
+                        {!! Form::text
+                            ('Contact', '', array(
+                            'id' => 'contact',
+                            'placeholder' => '09000000000',
+                            'maxlength' => 50,
+                            'name' => 'txtContact',
+                            'class' => 'validate',
+                            'required' => true,)) 
+                        !!}
+                        {!! Form::label( 'contact', 'Contact:' ) !!}
+                    </div>
+                    <div class="input-field col s12">
+                        <p>
+                            <input name="rdGender" type="radio" id="test1" value = "1"/>
+                            <label for="test1" class="radlabel">Male</label>
+                        </p>
+                        <p>    
+                            <input name="rdGender" type="radio" id="test2" value="0" />
+                            <label for="test2" class="radlabel">Female</label>
+                        </p>
+                    </div>
+                    <div class="input-field col s12">
+                        <label for="date">Birthdate</label>
+                        <input id="date" type="date" class="datepicker" name="datBdate">
+                    </div>
+                    <div class="input-field col s12">
+                        {!! Form::submit( 'Submit', array(
+                            'id' => 'btn-add-setting',
+                            'class' => 'btn'
+                            )) 
+                        !!}
+                        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+                    </div>
+                </div>
+                {!! Form::close() !!}
             </div>
         </div>
     </div>

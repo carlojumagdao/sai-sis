@@ -9,10 +9,13 @@
 @section('title')
     {{"Donor"}}
 @stop   
+@section('style')
+    <link rel="stylesheet" href="{{ URL::asset('assets/css/table.css') }}">
+@stop
 @section('content')
 <!-- START CONTENT -->
     @section('title-page')
-        {{"Donor"}}
+        {{"Donor"}} <a href="#add-donor" class="modal-trigger waves-effect btn" style="font-size: 15px;">Add New</a>
     @stop  
     <!--start container-->
     <div class="container">
@@ -34,109 +37,40 @@
                     <blockquote>{{ Session::get('message') }}</blockquote>
                 </div>
             @endif
-                <div class="col s12 m7">
-                    <div class="card white">
-                        <div class="card-content black-text" >
-                            <table class="bordered" id="list">
+            <div class="col s12 m12">
+                <div class="row">
+                    <div id="admin" class="col s12">
+                        <div class="card material-table">
+                            <table id="datatable">
                                 <thead>
                                     <tr>
-                                        <th data-field="id">#</th>
-                                        <th data-field="schoo">Name</th>
-                                        <th data-field="coordinator">Email</th>
-                                        <th data-field="price">Action</th>
+                                        <th>#. Name</th>
+                                        <th>Email</th>  
+                                        <th>Pledge</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <?php $intCounter = 1 ?>
-                                @foreach($donors as $donor)
+                                    <?php $intCounter = 1 ?>
+                                    @foreach($donors as $donor)
                                     <tr>
-                                        <td class = "id hide">{{$donor->intDonorId}}</td>
-                                        <td>{{$intCounter}}</td>
-                                        <td>
-                                            {{$donor->strDonorName}}
-                                        </td>
+                                        <td>{{$intCounter.". ". $donor->strDonorName}}</td>
                                         <td class="email">
-                                            {{$donor->strDonorEmail}}
+                                        {{$donor->strDonorEmail}}
                                         </td>
-                                        <td>
-
-                                        <a href="donor/edit/{{$donor->intDonorId}}" class='waves-effect waves-light btn-floating btn-small orange edit' data-position='top' data-tooltip='Edit'><i class='mdi-content-create'></i></a>
-
+                                        <td class = "id hide">{{$donor->intDonorId}}</td>
+                                        <td>₱ {{number_format($donor->dblDonorAmount,2)}}</td>
+                                        <td>   
                                         <a href="#send" class="waves-effect waves-light btn-floating btn-small blue send" data-position='top' data-tooltip='Send'><i class='mdi-content-send'></i></a>
-                                        <br>
-                                        <a href="#delete" class="waves-effect waves-light btn-floating btn-small red delete" data-position='top' data-tooltip='Delete'><i class='mdi-action-delete'></i></a>
-
                                         <a href="#generate" class="waves-effect waves-light btn-floating btn-small green generate" data-position='top' data-tooltip='Generate'><i class='mdi-content-inbox'></i></a>
+                                        <a href="donor/edit/{{$donor->intDonorId}}" class='waves-effect waves-light btn-floating btn-small orange edit' data-position='top' data-tooltip='Edit'><i class='mdi-content-create'></i></a>
+                                        <a href="#delete" class="waves-effect waves-light btn-floating btn-small red delete" data-position='top' data-tooltip='Delete'><i class='mdi-action-delete'></i></a>
                                         </td>
                                     </tr>
                                     <?php $intCounter++ ?>
-                                @endforeach
+                                    @endforeach
                                 </tbody>
                             </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="col s12 m5">
-                    <div class="card white">
-                        <div class="card-content black-text">
-                            <span class="card-title black-text">Add Donor</span>
-                            <div class="row">
-                                {!! Form::open( array(
-                                    'method' => 'post',
-                                    'id' => 'form-add-setting',
-                                    'class' => 'col s12',
-                                    'action' => 'donorController@create'
-                                ) ) !!}
-                                <div class="row">
-                                    <div class="input-field col s12">
-                                        {!! Form::text
-                                            ('Name', '', array(
-                                            'id' => 'Name',
-                                            'placeholder' => 'Full Name / Company Name',
-                                            'maxlength' => 50,
-                                            'name' => 'txtName',
-                                            'class' => 'validate',
-                                            'required' => true,)) 
-                                        !!}
-                                        {!! Form::label( 'Name', 'Donor Name:' ) !!}
-                                    </div>
-                                    <div class="input-field col s12">
-                                        {!! Form::email
-                                            ('email', '', array(
-                                            'id' => 'email',
-                                            'placeholder' => 'juandelacruz@gmail.com',
-                                            'maxlength' => 50,
-                                            'name' => 'txtEmail',
-                                            'class' => 'validate',)) 
-                                        !!}
-                                        {!! Form::label( 'email', 'Email:' ) !!}
-                                    </div>
-                                    <div class="input-field col s12">
-                                        {!! Form::number
-                                            ('Amount', '', array(
-                                            'id' => 'Amount',
-                                            'placeholder' => '840',
-                                            'maxlength' => 50,
-                                            'name' => 'txtAmount',
-                                            'class' => 'validate',
-                                            'required' => true,)) 
-                                        !!}
-                                        {!! Form::label( 'Name', 'Pledge Amount:' ) !!}
-                                    </div>
-                                    <div class="input-field col s12">
-                                        <label for="date">Birthdate</label>
-                                        <input id="date" type="date" class="datepicker" name="datBdate">
-                                    </div>
-                                    <div class="input-field col s12">
-                                        {!! Form::submit( 'Submit', array(
-                                            'id' => 'btn-add-setting',
-                                            'class' => 'btn'
-                                            )) 
-                                        !!}
-                                    </div>
-                                </div>
-                                {!! Form::close() !!}
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -154,6 +88,74 @@
     <div id="generate-message" class="modal bottom-sheet">
         <div class="modal-content">
             <div class="content-message"></div>
+        </div>
+    </div>
+    <div id="add-donor" class="modal">
+        <div class="modal-content">
+
+            <div class="row">
+                
+                {!! Form::open( array(
+                    'method' => 'post',
+                    'id' => 'form-add-setting',
+                    'class' => 'col s12',
+                    'action' => 'donorController@create'
+                ) ) !!}
+
+                <div class="row">
+                    <div class="input-field col s12">
+                        <h5>Add donor</h5>
+                    </div>
+                    <div class="input-field col s12">
+                        {!! Form::text
+                            ('Name', '', array(
+                            'id' => 'Name',
+                            'placeholder' => 'Full Name / Company Name',
+                            'maxlength' => 50,
+                            'name' => 'txtName',
+                            'class' => 'validate',
+                            'required' => true,)) 
+                        !!}
+                        {!! Form::label( 'Name', 'Donor Name:' ) !!}
+                    </div>
+                    <div class="input-field col s12">
+                        {!! Form::email
+                            ('email', '', array(
+                            'id' => 'email',
+                            'placeholder' => 'juandelacruz@gmail.com',
+                            'maxlength' => 50,
+                            'name' => 'txtEmail',
+                            'class' => 'validate',)) 
+                        !!}
+                        {!! Form::label( 'email', 'Email:' ) !!}
+                    </div>
+                    <div class="input-field col s12">
+                        {!! Form::number
+                            ('Amount', '', array(
+                            'id' => 'Amount',
+                            'placeholder' => '840',
+                            'maxlength' => 50,
+                            'name' => 'txtAmount',
+                            'class' => 'validate',
+                            'required' => true,)) 
+                        !!}
+                        {!! Form::label( 'Name', 'Pledge Amount:' ) !!}
+                    </div>
+                    <div class="input-field col s12">
+                        <label for="date">Birthdate</label>
+                        <input id="date" type="date" class="datepicker" name="datBdate">
+                    </div>
+                    <div class="input-field col s12">
+                        {!! Form::submit( 'Submit', array(
+                            'id' => 'btn-add-setting',
+                            'class' => 'btn'
+                            )) 
+                        !!}
+                        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+                    </div>
+                </div>
+                {!! Form::close() !!}
+            </div>
         </div>
     </div>
     <!--end container-->

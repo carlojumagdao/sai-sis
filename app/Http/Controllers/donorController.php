@@ -23,7 +23,7 @@ class donorController extends Controller
     public function create(Request $request){
         $rules = array(
             'txtName' => 'required',
-            'txtAmount' => 'required:digit',
+            'txtAmount' => 'required|integer|min:1',
             'datBdate' => 'before:today',
             'txtEmail' => 'email',
         );
@@ -57,6 +57,7 @@ class donorController extends Controller
         return Redirect::back();
     }
     public function delete(){
+
         $id = $_POST['id'];
         $DonorLearner = DB::select('SELECT intDLDonorId FROM tblDonorLearner WHERE intDLDonorId = ? AND blDLDelete = 0', [$id]);
         if($DonorLearner ){
@@ -90,7 +91,7 @@ class donorController extends Controller
             'txtName' => 'required',
             'datBdate' => 'before:today',
             'txtEmail' => 'email',
-            'txtAmount' => 'required:digit',
+            'txtAmount' => 'required|integer|min:1',
         );
         $messages = [
             'required' => 'The :attribute field is required.',
