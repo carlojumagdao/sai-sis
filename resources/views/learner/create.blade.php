@@ -33,7 +33,7 @@
                 </div>
             @endif
                 <div class="col s12 m12">
-                    <div class="card white">
+                    <div class="custom-container">
                         <div class="card-content black-text">
                             <span class="card-title black-text">Learner's form</span>
                             <div class="row">

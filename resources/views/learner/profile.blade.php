@@ -250,7 +250,7 @@
                                                 </div>
                                             </div>
                                             <div class="col s12 m12">
-                                                <div class="card white">
+                                                <div class="custom-container">
                                                     <div class="card-content black-text">
                                                         <div class="row">
                                                             {!! Form::open( array(
