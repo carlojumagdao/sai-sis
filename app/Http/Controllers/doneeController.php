@@ -19,7 +19,7 @@ class doneeController extends Controller
         $countStories = DB::select('SELECT COUNT(intStoId) AS total FROM tblStory WHERE md5(strStoLearCode) = ?',[$code]);
         $attPresent = DB::select('SELECT COUNT(*) AS present FROM tblAttendance WHERE md5(strAttLearCode) = ?',[$code]);
         $attAbsent = DB::select('SELECT COUNT(s.intSDId) AS absent FROM tblLearner as l
-            INNER JOIN tblSchoolDay as s ON l.intLearSesId = s.intSDSesId WHERE l.strLearCode = ? AND s.intSDId NOT IN (SELECT intAttSDId FROM tblAttendance WHERE md5(strAttLearCode) = ?) ORDER BY s.datSchoolDay DESC',[$code,$code]);
+            INNER JOIN tblSchoolDay as s ON l.intLearSesId = s.intSDSesId WHERE md5(l.strLearCode) = ? AND s.intSDId NOT IN (SELECT intAttSDId FROM tblAttendance WHERE md5(strAttLearCode) = ?) ORDER BY s.datSchoolDay DESC',[$code,$code]);
         foreach ($attPresent as $value) {
             $present = $value->present;
         }
