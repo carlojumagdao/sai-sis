@@ -293,7 +293,10 @@ Route::group(['middleware' => 'auth'], function(){
 
 		Route::get('report/grades', 'ReportController@grades');
 		Route::post('report/grades/generate', 'ReportController@grdGenerate');
-
+		
+		Route::get('report/learners', 'ReportController@learners');
+		Route::post('report/learners/generate', 'ReportController@learGenerate');
+		// Reports
 	});
 });
 
