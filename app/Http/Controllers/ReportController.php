@@ -24,6 +24,12 @@ class ReportController extends Controller
             ->lists('strSesName', 'intSesId');
     	return view('report.grades',['ses_options' => $ses_options] );
     }
+    public function learners(){
+        $ses_options = DB::table('tblSession')
+            ->where('blSesDelete', 0)
+            ->lists('strSesName', 'intSesId');
+        return view('report.learners',['ses_options' => $ses_options] );
+    }
     public function grdGenerate(Request $request){
     	$intSesId = $request->input('selSession');
     	$intQuarter = $request->input('selQuarter');
@@ -132,6 +138,34 @@ class ReportController extends Controller
     ORDER BY l.strLearFname',[$intSesId,$datFrom,$datTo]);
             
         $pdf = PDF::loadView('pdf.attendance', ['learners' => $learners,'schDays'=>$schDays,'coles'=>$coles,'sessions'=>$sessions,'schools'=>$schools,'from'=>$datFrom,'to'=>$datTo,'programs'=>$programs]);
+        return $pdf->stream();
+
+    }
+    public function learGenerate(Request $request){
+        $intSesId = $request->input('selSession');
+
+        $rules = array(
+            'selSession' => 'required'
+        );
+        $messages = [
+            'required' => 'The :attribute field is required.',
+        ];
+        $niceNames = array(
+            'selSession' => 'Session'
+        );
+        $validator = Validator::make($request->all(),$rules,$messages);
+        $validator->setAttributeNames($niceNames); 
+        if ($validator->fails()) {
+            return Redirect::back()->withErrors($validator);
+        }
+        $sessions = DB::select('SELECT strSesName FROM tblSession WHERE intSesId = ?',[$intSesId]); 
+        $schools = DB::select('SELECT sc.strSchName FROM tblSchool AS sc LEFT JOIN tblSession AS s ON s.intSesSchId = sc.intSchId WHERE s.intSesId = ?',[$intSesId]);
+        $programs = DB::select('SELECT p.strProgName FROM tblProgram AS P LEFT JOIN tblSession AS s ON p.intProgId = s.intSesProgId WHERE s.intSesId = ?',[$intSesId]);
+        
+        $coles = DB::select('SELECT CONCAT(c.strColeFname," ",c.strColeLname) AS Name FROM tblColearner AS c LEFT JOIN tblSession AS s ON s.intSesColeId = c.intColeId WHERE s.intSesId = ? ',[$intSesId]);
+        $learners = DB::select('SELECT CONCAT(strLearFname," ", strLearLname) as Name FROM tblLearner WHERE intLearSesId = ?',[$intSesId]);
+            
+        $pdf = PDF::loadView('pdf.learners', ['learners' => $learners,'coles'=>$coles,'sessions'=>$sessions,'schools'=>$schools,'programs'=>$programs]);
         return $pdf->stream();
 
     }

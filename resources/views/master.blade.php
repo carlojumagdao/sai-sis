@@ -120,6 +120,8 @@
                                         </li>                                        
                                         <li><a href="{{ URL::to('report/attendance') }}">Attendance</a>
                                         </li>
+                                        <li><a href="{{ URL::to('report/learners') }}">List of learners</a>
+                                        </li>
                                     </ul>
                                 </div>
                             </li>
