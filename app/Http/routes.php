@@ -223,6 +223,22 @@ Route::group(['middleware' => 'auth'], function(){
 		'uses' => 'learnerController@ViewGrades',
 		'as' => 'ViewGrades.learner'
 	));
+
+	// Birthday
+	Route::get('birthday', 'BirthdayController@index');
+	// Birthday
+
+	// Reports
+	Route::get('report/attendance', 'ReportController@attendance');
+	Route::post('report/attendance/generate', 'ReportController@attGenerate');
+
+	Route::get('report/grades', 'ReportController@grades');
+	Route::post('report/grades/generate', 'ReportController@grdGenerate');
+	
+	Route::get('report/learners', 'ReportController@learners');
+	Route::post('report/learners/generate', 'ReportController@learGenerate');
+	// Reports
+	
 	// Users
 	Route::group(['middleware' => 'admin'], function()
 	{
@@ -283,20 +299,7 @@ Route::group(['middleware' => 'auth'], function(){
 		// Learning Center
 
 
-		// Birthday
-		Route::get('birthday', 'BirthdayController@index');
-		// Birthday
 
-		// Reports
-		Route::get('report/attendance', 'ReportController@attendance');
-		Route::post('report/attendance/generate', 'ReportController@attGenerate');
-
-		Route::get('report/grades', 'ReportController@grades');
-		Route::post('report/grades/generate', 'ReportController@grdGenerate');
-		
-		Route::get('report/learners', 'ReportController@learners');
-		Route::post('report/learners/generate', 'ReportController@learGenerate');
-		// Reports
 	});
 });
 
