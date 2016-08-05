@@ -20,10 +20,10 @@ Extra Laravel validation rules for dealing with images.
 Install the package through [Composer](http://getcomposer.org).
 
 ```
-composer require "cviebrock/image-validator:^2.0"
+composer require "cviebrock/image-validator:^2.1"
 ```
 
-**Note:** Version 2.0 of this package is designed to work with Laravel 5.  If you are using Laravel 4, then checkout the `1.x` branch and use the latest version there.
+**Note:** Version 2.x of this package is designed to work with Laravel 5.  If you are using Laravel 4, then checkout the `1.x` branch and use the latest version there.
 
 Add the following to your `providers` array in `app/config/app.php`:
 
@@ -119,7 +119,7 @@ Note that you may run into issues with floating point rounding.
 	// logo must be ready for the big screen TV :)
 
 	$rules = array(
-		'logo' => 'required|image|image_aspect:16:9',
+		'logo' => 'required|image|image_aspect:16,9',
 	);
 
 
@@ -148,7 +148,7 @@ Please use [Github](https://github.com/cviebrock/image-validator/issues) for bug
 <a name="copyright"></a>
 ## Copyright and License
 
-Eloquent-Sluggable was written by Colin Viebrock and released under the MIT License. See the LICENSE file for details.
+Image-Validator was written by Colin Viebrock and released under the MIT License. See the LICENSE file for details.
 
 Copyright 2013 Colin Viebrock
 

@@ -27,10 +27,12 @@ class ImageValidatorServiceProvider extends ServiceProvider
 	public function boot()
 	{
 		$this->loadTranslationsFrom(__DIR__.'/../lang', 'image-validator');
+		
+		$messages = trans('image-validator::validation');
 
-		$this->app->bind('Cviebrock\ImageValidator\ImageValidator', function($app)
+		$this->app->bind('Cviebrock\ImageValidator\ImageValidator', function($app) use ($messages)
 		{
-			$validator = new ImageValidator($app['translator'], [], [], trans('image-validator::validation') );
+			$validator = new ImageValidator($app['translator'], [], [], $messages );
 
 			if (isset($app['validation.presence']))
 			{
@@ -55,15 +57,6 @@ class ImageValidatorServiceProvider extends ServiceProvider
 	}
 
 	/**
-	* Returns the translation string depending on laravel version
-	* @return string
-		*/
-	protected function loadTranslator()
-	{
-		return trans('image-validator::validation');
-	}
-
-	/**
 	* Add new rules to the validator.
 	*/
 	protected function addNewRules()
@@ -83,8 +76,8 @@ class ImageValidatorServiceProvider extends ServiceProvider
 	protected function extendValidator($rule)
 	{
 		$method = studly_case($rule);
-		$translation = trans('image-validator::validation');
-		$this->app['validator']->extend($rule, 'Cviebrock\ImageValidator\ImageValidator@validate' . $method, $translation[$rule]);
+		$translation = $this->app['translator']->trans('image-validator::validation.'.$rule);
+		$this->app['validator']->extend($rule, 'Cviebrock\ImageValidator\ImageValidator@validate' . $method, $translation);
 		$this->app['validator']->replacer($rule, 'Cviebrock\ImageValidator\ImageValidator@replace' . $method );
 	}
 

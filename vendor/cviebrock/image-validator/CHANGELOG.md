@@ -1,5 +1,24 @@
 # Changelog
 
+## v2.1.2 - 20-Jul-2016
+
+- Chinese-Traditional translation (#47, thanks @CaraWang)
+
+
+## v2.1.1 - 19-Jul-2016
+
+- Fix for translations not loading in closure (#45, thanks @nWidart)
+
+
+## v2.1.0 - 27-May-2016
+
+- Latvian translation (#42, thanks @scvaer)
+- Fix for aspect ratio checking on images where the result would be fractional pixels (#31)
+- Fix where aspect error message only lists one parameter when using `3,2` format for aspect (#41)
+- Fix for Lumen (#44, thanks @WrongWay)
+- Fix where translations aren't yet available (#30, thanks @superdummy)
+
+
 ## v2.0.1 - 11-Apr-2016
 
 - Spanish translation (#32, thanks @keyduq).
