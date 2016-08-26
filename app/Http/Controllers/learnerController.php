@@ -109,8 +109,7 @@ class learnerController extends Controller
             'selSchool' => 'required',
             'rdGender' => 'required',
             'pic' => 'mimes:jpeg,jpg,png,bmp|max:10000',
-            'txtVision' => 'required',
-            'txtContact' => 'digits:11'
+            'txtVision' => 'required'
         );
         $messages = [
             'required' => 'The :attribute field is required.',
@@ -208,8 +207,7 @@ class learnerController extends Controller
             'selSchool' => 'required',
             'rdGender' => 'required',
             'pic' => 'required|mimes:jpeg,jpg,png,bmp|max:10000',
-            'txtVision' => 'required',
-            'txtContact' => 'digits:11'
+            'txtVision' => 'required'
         );
         $messages = [
             'required' => 'The :attribute field is required.',
@@ -261,9 +259,31 @@ class learnerController extends Controller
                     $Learner->intLearSesId = $request->input('selSes');
                     $Learner->intLearSchId = $request->input('selSchool');
                     $Learner->save();
-                }catch (\Illuminate\Database\QueryException $e){
+                } catch(Exception $e){
                     $errMess = $e->getMessage();
                     return Redirect::back()->withErrors($errMess);
+                } catch (\Illuminate\Database\QueryException $e){
+                    $result = DB::select('SELECT strLearCode FROM tblLearner ORDER BY strLearCode');
+                    $strLatestCode = "";
+                    foreach ($result as $value) {
+                        foreach ($value as $key ) {
+                            $strLatestCode = $key;
+                        }
+                    }
+                    $strNewCode = $this->smartcounter($strLatestCode);
+                    $Learner = new Learner();
+                    $Learner->strLearCode = $strNewCode;
+                    $Learner->strLearFname = $request->input('txtFname');
+                    $Learner->strLearLname = $request->input('txtLname');
+                    $Learner->datLearBirthDate = $request->input('datBdate');
+                    $Learner->blLearGender = $request->input('rdGender');
+                    $Learner->strLearPicPath = $fileName;
+                    $Learner->strLearDream = $request->input('txtDream');
+                    $Learner->strLearVision = $request->input('txtVision');
+                    $Learner->strLearContact = $request->input('txtContact');
+                    $Learner->intLearSesId = $request->input('selSes');
+                    $Learner->intLearSchId = $request->input('selSchool');
+                    $Learner->save();
                 }
             } else{
                 return Redirect::back()->withErrors("uploaded file is not valid");
