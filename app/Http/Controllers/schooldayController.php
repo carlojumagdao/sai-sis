@@ -55,7 +55,7 @@ class schooldayController extends Controller
         $sesid = $request->input('sesid');
         $sdid = $request->input('sdid');
         $date = $request->input('date');
-        $result = DB::select('SELECT strLearCode, CONCAT(strLearFname," ", strLearLname) AS strLearName FROM tblLearner WHERE intLearSesId = ? AND strLearCode NOT IN (SELECT strAttLearCode FROM tblAttendance WHERE intAttSDId = ?)', [$sesid,$sdid]);
+        $result = DB::select('SELECT strLearCode, CONCAT(strLearFname," ", strLearLname) AS strLearName FROM tblLearner WHERE intLearSesId = ? AND blLearDelete = 0 AND strLearCode NOT IN (SELECT strAttLearCode FROM tblAttendance WHERE intAttSDId = ?)', [$sesid,$sdid]);
         return view('schoolday.learners', ['learners' => $result,'date'=>$date,'sdid'=>$sdid]);
     }
     public function addPresentLearners(Request $request){
