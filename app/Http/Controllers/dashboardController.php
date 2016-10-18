@@ -28,7 +28,7 @@ class dashboardController extends Controller
         $bdays = $countBdayLear + $countBdayCole + $countBdayDonor;
         session(['bdays' => $bdays]);
         // for the birthday section
-        $learners = DB::select('SELECT COUNT(strLearCode) AS learners FROM tblLearner WHERE blLearDelete = 0');
+        $learners = DB::select('SELECT COUNT(strLearCode) AS learners FROM tblLearner');
         foreach ($learners as $value) {
             $intLearners = $value->learners;
         }
