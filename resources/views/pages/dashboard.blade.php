@@ -12,7 +12,7 @@
 @section('charts')
     <script src="{{ URL::asset('assets/google-chart-js/loader.js') }}">  </script>
     <script type="text/javascript">
-      google.charts.load('current', {'packages':['bar','corechart']});
+      google.charts.load('43', {'packages':['bar','corechart']});
       google.charts.setOnLoadCallback(drawStuff);
 
       function drawStuff() {
