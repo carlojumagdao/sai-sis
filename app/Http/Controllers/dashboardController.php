@@ -58,10 +58,10 @@ class dashboardController extends Controller
         $sesgrades = DB::select('SELECT (AVG(g.dblGrdEnglish) + AVG(g.dblGrdFilipino) + AVG(g.dblGrdMakabayan) + AVG(g.dblGrdMath) + AVG(g.dblGrdScience)) / 5 
             AS content, s.strSesName AS session FROM tblSession AS s 
             LEFT JOIN tblLearner as l ON s.intSesId = l.intLearSesId 
-            LEFT JOIN tblGrade AS g ON l.strLearCode = g.strGrdLearCode WHERE s.blSesDelete = 0 GROUP BY s.strSesName ');
+            LEFT JOIN tblGrade AS g ON l.strLearCode = g.strGrdLearCode WHERE s.blSesDelete = 0 AND g.blGrdDelete = 0  AND l.blLearDelete = 0 GROUP BY s.strSesName ');
         $seslearners = DB::select('SELECT count(l.strLearCode) AS content, s.strSesName AS session FROM tblSession as s
                 LEFT JOIN tblLearner as l ON s.intSesId = l.intLearSesId
-            WHERE s.blSesDelete = 0 GROUP BY s.strSesName  ORDER BY s.strSesName ');
+            WHERE s.blSesDelete = 0 AND l.blLearDelete = 0 GROUP BY s.strSesName  ORDER BY s.strSesName ');
 
         $loclears = DB::select('SELECT count(l.strLearCode) AS content, lc.strLCLocation AS location FROM tblLearningCenter as lc
                 LEFT JOIN tblSchool AS s ON lc.intLCId = s.intSchLCId
@@ -70,7 +70,7 @@ class dashboardController extends Controller
         $proglears = DB::select('SELECT count(l.strLearCode) AS content, p.strProgName AS program FROM tblProgram as p
                 LEFT JOIN tblSession AS s ON p.intProgId = s.intSesProgId
                 LEFT JOIN tblLearner as l ON s.intSesId = l.intLearSesId
-            WHERE p.blProgDelete = 0 GROUP BY p.strProgName  ORDER BY p.strProgName');
+            WHERE p.blProgDelete = 0 AND l.blLearDelete = 0 GROUP BY p.strProgName  ORDER BY p.strProgName');
 
         for($intCounter = 0; $intCounter < sizeOf($seslearners); $intCounter++){
             if($sespresents[$intCounter]->content == 0 || $seslearners[$intCounter]->content == 0 || $sesdays[$intCounter]->content == 0){
