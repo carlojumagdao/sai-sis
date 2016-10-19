@@ -208,9 +208,9 @@
             data: { sdid:sdid, learners:present},
             success:function(data){
                 $('#attendance').closeModal();
-                alert("Success");
+                Materialize.toast('Success!', 4000); 
             },error:function(){ 
-                alert("Failed: Cannot add present learners.");
+                Materialize.toast('Error!', 4000); 
             },
             complete: function(){
                 $('#email-loader').closeModal();
