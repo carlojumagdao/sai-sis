@@ -163,7 +163,7 @@ class ReportController extends Controller
         $programs = DB::select('SELECT p.strProgName FROM tblProgram AS P LEFT JOIN tblSession AS s ON p.intProgId = s.intSesProgId WHERE s.intSesId = ?',[$intSesId]);
         
         $coles = DB::select('SELECT CONCAT(c.strColeFname," ",c.strColeLname) AS Name FROM tblColearner AS c LEFT JOIN tblSession AS s ON s.intSesColeId = c.intColeId WHERE s.intSesId = ? ',[$intSesId]);
-        $learners = DB::select('SELECT CONCAT(strLearFname," ", strLearLname) as Name FROM tblLearner WHERE intLearSesId = ?',[$intSesId]);
+        $learners = DB::select('SELECT CONCAT(strLearLname," ",strLearFname) as Name FROM tblLearner WHERE intLearSesId = ? ORDER BY strLearLname',[$intSesId]);
             
         $pdf = PDF::loadView('pdf.learners', ['learners' => $learners,'coles'=>$coles,'sessions'=>$sessions,'schools'=>$schools,'programs'=>$programs]);
         return $pdf->stream();
