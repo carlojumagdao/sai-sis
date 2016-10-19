@@ -102,6 +102,14 @@
             </div>
         </div>
     </div>
+    <div id="email-loader" class="modal bottom-sheet">
+        <div class="modal-content">
+            <p>Processing...</p>
+            <div class="progress">
+                <div class="indeterminate"></div>
+            </div>
+        </div>
+    </div>
     <div id="learners">
         <div id="attendance" class="modal">
             <div class="modal-content">
@@ -186,6 +194,7 @@
 
             }   
         }
+        $('#email-loader').openModal();
         $.ajax({
             url: "{{ URL::to('schoolday/learner/present') }}",
             type:"POST",
@@ -202,6 +211,9 @@
                 alert("Success");
             },error:function(){ 
                 alert("Failed: Cannot add present learners.");
+            },
+            complete: function(){
+                $('#email-loader').closeModal();
             }
         }); //end of ajax
     });
