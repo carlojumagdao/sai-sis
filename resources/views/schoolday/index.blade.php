@@ -161,6 +161,7 @@
         var sdid = $(this).parent().parent().find('.id').text(); 
         var sesid = {{$sesid}};
         var date = $(this).parent().parent().find('.date').text(); 
+        $('#email-loader').openModal();
         $.ajax({
             url: "{{ URL::to('schoolday/learner') }}",
             type:"POST",
@@ -177,7 +178,9 @@
                 $( "#learners" ).append(data);
                 $('#attendance').openModal();
             },error:function(){ 
-                alert("Failed: Cannot view learner of this record.");
+                Materialize.toast('Failed: Cannot view learner of this record.',4000);
+            },complete:function(){
+                $('#email-loader').closeModal();
             }
         }); //end of ajax
     });
