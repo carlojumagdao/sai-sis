@@ -666,6 +666,14 @@
             <button class="btn edit-sto modal-action modal-close waves-effect waves-green yellow darken-2"><i class='mdi-content-create'></i>Edit</button> 
         </div>
     </div>
+    <div id="email-loader" class="modal bottom-sheet">
+        <div class="modal-content">
+            <p>Processing...</p>
+            <div class="progress">
+                <div class="indeterminate"></div>
+            </div>
+        </div>
+    </div>
     <div id="edit-story" class="modal">
         <div class="modal-content">
             <div class="row">
@@ -734,6 +742,7 @@
         makabayan = document.getElementById("makabayan").value;
         level = document.getElementById("level").value;
         fname = document.getElementById("fname").value;
+        $('#email-loader').openModal();
         $.ajax({
             url: "{{ URL::to('learner/grade') }}",
             type:"POST",
@@ -747,8 +756,11 @@
             success:function(data){
                 $( "#grades" ).empty();
                 $( "#grades" ).append(data);
+                Materialize.toast('Success!', 4000);
             },error:function(){ 
-                alert("Error: Please check your input.");
+                Materialize.toast('Error: Please check your input.',4000);
+            },complete: function(){
+                $('#email-loader').closeModal();
             }
         }); //end of ajax
     });
@@ -765,6 +777,7 @@
                 counter++;
             }   
         }
+        $('#email-loader').openModal();
         $.ajax({
             url: "{{ URL::to('learner/attendance') }}",
             type:"POST",
@@ -778,8 +791,11 @@
             success:function(data){
                 $( "#attendance" ).empty();
                 $( "#attendance" ).append(data);
+                Materialize.toast('Success!',4000);
             },error:function(){ 
-                alert("Error: Please check your input.");
+                Materialize.toast('Error: Please check your input.',4000);
+            },complete:function(){
+                $('#email-loader').closeModal();
             }
         }); //end of ajax
     });
@@ -789,6 +805,7 @@
             var id = $(this).parent().parent().find('.id-grade').text(); 
             var code = document.getElementById("code").value;
             var fname = document.getElementById("fname").value;
+            $('#email-loader').openModal();
             $.ajax({
                 url: "{{ URL::to('learner/grade/delete') }}",
                 type:"POST",
@@ -802,8 +819,11 @@
                 success:function(data){
                     $( "#grades" ).empty();
                     $( "#grades" ).append(data);
+                    Materialize.toast('Success!',4000);
                 },error:function(){ 
-                    alert("Error: Please check your input.");
+                    Materialize.toast('Error: Please check your input.',4000);
+                },complete:function(){
+                    $('#email-loader').closeModal();
                 }
             }); //end of ajax
         }
@@ -817,6 +837,7 @@
             var id = $(this).parent().parent().find('.id-story').text(); 
             var code = document.getElementById("code").value;
             var fname = document.getElementById("fname").value;
+            $('#email-loader').openModal();
             $.ajax({
                 url: "{{ URL::to('learner/stories/delete') }}",
                 type:"POST",
@@ -830,8 +851,11 @@
                 success:function(data){
                     $( "#stories" ).empty();
                     $( "#stories" ).append(data);
+                    Materialize.toast('Success!',4000);
                 },error:function(){ 
-                    alert("Error: Please check your input.");
+                    Materialize.toast('Error: Please check your input.',4000);
+                },complete:function(){
+                    $('#email-loader').closeModal();
                 }
             }); //end of ajax
         }
@@ -845,6 +869,7 @@
             var id = $(this).parent().parent().find('.id-att').text(); 
             var code = document.getElementById("code").value;
             var fname = document.getElementById("fname").value;
+            $('#email-loader').openModal();
             $.ajax({
                 url: "{{ URL::to('learner/attendance/delete') }}",
                 type:"POST",
@@ -858,8 +883,11 @@
                 success:function(data){
                     $( "#attendance" ).empty();
                     $( "#attendance" ).append(data);
+                    Materialize.toast('Success!',4000);
                 },error:function(){ 
-                    alert("Error: Please check your input.");
+                    Materialize.toast('Error: Please check your input.',4000);
+                },complete:function(){
+                    $('#email-loader').closeModal();
                 }
             }); //end of ajax
         }
@@ -872,6 +900,7 @@
         title = document.getElementById("sto-title").value;
         author = document.getElementById("sto-author").value;
         content = document.getElementById("sto-content").value;
+        $('#email-loader').openModal();
         $.ajax({
             url: "{{ URL::to('learner/stories') }}",
             type:"POST",
@@ -885,8 +914,11 @@
             success:function(data){
                 $( "#stories" ).empty();
                 $( "#stories" ).append(data);
+                Materialize.toast('Success!',4000);
             },error:function(){ 
-                alert("Error: Please check your input.");
+                Materialize.toast('Error: Please check your input.',4000);
+            },complete:function(){
+                $('#email-loader').closeModal();
             }
         }); //end of ajax
     });
