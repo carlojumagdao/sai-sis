@@ -206,12 +206,14 @@ class learnerController extends Controller
             'selSes' => 'required',
             'selSchool' => 'required',
             'rdGender' => 'required',
-            'pic' => 'required|mimes:jpeg,jpg,png,bmp|max:10000',
+            'pic' => 'required|mimes:jpeg,jpg,png,bmp|max:20000',
             'txtVision' => 'required'
         );
         $messages = [
             'required' => 'The :attribute field is required.',
-            'digits' => 'The :attribute field must be a 11 digit characters.'
+            'digits' => 'The :attribute field must be a 11 digit characters.',
+            'mimes' => 'Only jpeg,jpg,png and bmp are allowed.',
+            'max' => 'Image file size exceeds.'
         ];
         $niceNames = array(
             'txtCode' => 'Student Code',

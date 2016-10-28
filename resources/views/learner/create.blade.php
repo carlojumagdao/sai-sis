@@ -115,8 +115,8 @@
                                         {!! Form::label( 'contact', 'Contact:' ) !!}
                                     </div>
                                     <div class="input-field col s7 offset-s4">
-                                        <label for="date">Birthdate</label>
-                                        <input id="date" type="date" class="datepicker" name="datBdate" placeholder="YYYY-MM-DD">
+                                        <!-- <label for="date">Birthdate</label> -->
+                                        <input id="date" type="date" name="datBdate" placeholder="YYYY-MM-DD">
                                     </div>
                                     
                                     <div class="input-field col s7 offset-s4">

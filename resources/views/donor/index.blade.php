@@ -142,8 +142,8 @@
                         {!! Form::label( 'Name', 'Pledge Amount:' ) !!}
                     </div>
                     <div class="input-field col s12">
-                        <label for="date">Birthdate</label>
-                        <input id="date" type="date" class="datepicker" name="datBdate">
+                        <!-- <label for="date">Birthdate</label> -->
+                        <input id="date" type="date" name="datBdate">
                     </div>
                     <div class="input-field col s12">
                         {!! Form::submit( 'Submit', array(

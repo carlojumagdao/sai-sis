@@ -83,8 +83,8 @@
                                         'name' => 'id',)) 
                                     !!}
                                     <div class="input-field col s12">
-                                        <label for="date">Date</label>
-                                        <input id="date" type="date" class="datepicker" name="datSchoolDate">
+                                        <!-- <label for="date">Date</label> -->
+                                        <input id="date" type="date" name="datSchoolDate">
                                     </div>
                                     <div class="input-field col s12">
                                         {!! Form::submit( 'Submit', array(
