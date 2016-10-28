@@ -332,8 +332,8 @@
                                         {!! Form::label( 'contact', 'Contact:' ) !!}
                                     </div>
                                     <div class="input-field col s7 offset-s4">
-                                        <label for="date">Birthdate</label>
-                                        <input id="date" type="date" class="datepicker" name="datBdate" placeholder="YYYY-MM-DD" value="{{$bdate}}">
+                                        <!-- <label for="date">Birthdate</label> -->
+                                        <input id="date" type="date" name="datBdate" placeholder="YYYY-MM-DD" value="{{$bdate}}">
                                     </div>
                                                                 <div class="input-field col s7 offset-s4">
                                                                     {!! Form::select('selSes', $ses_options,  ['id' => 'session','placeholder' => $session]
