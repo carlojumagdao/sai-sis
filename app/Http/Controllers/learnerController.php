@@ -206,7 +206,7 @@ class learnerController extends Controller
             'selSes' => 'required',
             'selSchool' => 'required',
             'rdGender' => 'required',
-            'pic' => 'required|mimes:jpeg,jpg,png,bmp|max:20000',
+            'pic' => 'mimes:jpeg,jpg,png,bmp|max:20000',
             'txtVision' => 'required'
         );
         $messages = [
@@ -232,7 +232,50 @@ class learnerController extends Controller
         if ($validator->fails()) {
             return Redirect::back()->withErrors($validator);
         } else{
-            if ($request->file('pic')->isValid()) {
+            // If the user didn't put an image, it will save the dafault image.
+            if(empty($request->file('pic'))){
+                $fileName = "default-avatar.jpg";
+                try{
+                    $Learner = new Learner();
+                    $Learner->strLearCode = $request->input('txtCode');
+                    $Learner->strLearFname = $request->input('txtFname');
+                    $Learner->strLearLname = $request->input('txtLname');
+                    $Learner->datLearBirthDate = $request->input('datBdate');
+                    $Learner->blLearGender = $request->input('rdGender');
+                    $Learner->strLearPicPath = $fileName;
+                    $Learner->strLearDream = $request->input('txtDream');
+                    $Learner->strLearVision = $request->input('txtVision');
+                    $Learner->strLearContact = $request->input('txtContact');
+                    $Learner->intLearSesId = $request->input('selSes');
+                    $Learner->intLearSchId = $request->input('selSchool');
+                    $Learner->save();
+                } catch(Exception $e){
+                    $errMess = $e->getMessage();
+                    return Redirect::back()->withErrors($errMess);
+                } catch (\Illuminate\Database\QueryException $e){
+                    $result = DB::select('SELECT strLearCode FROM tblLearner ORDER BY strLearCode');
+                    $strLatestCode = "";
+                    foreach ($result as $value) {
+                        foreach ($value as $key ) {
+                            $strLatestCode = $key;
+                        }
+                    }
+                    $strNewCode = $this->smartcounter($strLatestCode);
+                    $Learner = new Learner();
+                    $Learner->strLearCode = $strNewCode;
+                    $Learner->strLearFname = $request->input('txtFname');
+                    $Learner->strLearLname = $request->input('txtLname');
+                    $Learner->datLearBirthDate = $request->input('datBdate');
+                    $Learner->blLearGender = $request->input('rdGender');
+                    $Learner->strLearPicPath = $fileName;
+                    $Learner->strLearDream = $request->input('txtDream');
+                    $Learner->strLearVision = $request->input('txtVision');
+                    $Learner->strLearContact = $request->input('txtContact');
+                    $Learner->intLearSesId = $request->input('selSes');
+                    $Learner->intLearSchId = $request->input('selSchool');
+                    $Learner->save();
+                }
+            } else if ($request->file('pic')->isValid()) {
                 $destinationPath = 'assets/images/uploads'; // upload path
                 $extension = $request->file('pic')->getClientOriginalExtension(); // getting image extension
                 $date = date("Ymdhis");
